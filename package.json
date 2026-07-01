@@ -15,7 +15,9 @@
     "upkeep:smoke": "node scripts/upkeep-smoke.mjs",
     "upkeep:users": "node scripts/fetch-upkeep-users.mjs",
     "users:diff": "node scripts/diff-users.mjs",
-    "upkeep:apply-user-updates": "node scripts/apply-upkeep-user-updates.mjs"
+    "upkeep:apply-user-updates": "node scripts/apply-upkeep-user-updates.mjs",
+    "ad:probe": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/export-ad-users.ps1 -Probe",
+    "ad:users": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/export-ad-users.ps1 -AllUpKeepUsers"
   },
   "dependencies": {
     "jszip": "^3.10.1",

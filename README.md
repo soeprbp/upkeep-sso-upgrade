@@ -31,6 +31,8 @@ npm run dev
 - `npm run users:diff` - compares UpKeep users with Microsoft Graph using `AZURE_*` app credentials
 - `npm run upkeep:apply-user-updates -- --file updates.csv` - previews UpKeep user PATCH requests
 - `npm run upkeep:apply-user-updates -- --file updates.csv --apply` - applies reviewed UpKeep user PATCH requests
+- `npm run ad:probe` - checks the local Windows domain lookup method available on this machine
+- `npm run ad:users` - looks up exported UpKeep user emails in local AD and writes `data/generated/ad-users.csv`
 
 ## UpKeep and Entra user workflow
 
@@ -46,8 +48,24 @@ This repo keeps that same connector pattern in `lib/upkeep-client.mjs`. Put secr
 copy .env.example .env.local
 npm run upkeep:smoke
 npm run upkeep:users
+npm run ad:probe
+npm run ad:users
+npm run users:diff -- --entra-csv data\generated\ad-users.csv
+```
+
+You can also check a few addresses directly before exporting the whole UpKeep list:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\export-ad-users.ps1 -Email user@welchpkg.com
+```
+
+For a manually exported Entra CSV instead of local AD:
+
+```bash
 npm run users:diff -- --entra-csv C:\path\to\entra-users.csv
 ```
+
+For cloud Entra Graph comparison, omit `--entra-csv` and configure `AZURE_TENANT_ID`, `AZURE_CLIENT_ID`, and `AZURE_CLIENT_SECRET` in `.env.local`.
 
 If UpKeep exposes the user list at a tenant-specific path, set `UPKEEP_USERS_ENDPOINT` in `.env.local` or pass it to the fetch script:
 
