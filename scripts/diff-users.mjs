@@ -2,6 +2,8 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { toCsv } from "../lib/csv.mjs";
 import { fetchEntraUsersFromGraph, readEntraUsersFromCsv } from "../lib/entra-users.mjs";
+import { loadDotEnv } from "../lib/env.mjs";
+import { loadPayrollUsers } from "../lib/payroll-users.mjs";
 import { diffUsers, summarizeDiff } from "../lib/user-diff.mjs";
 
 const columns = [
@@ -15,7 +17,20 @@ const columns = [
   { key: "entraId" },
   { key: "entraEmail" },
   { key: "entraDisplayName" },
-  { key: "entraAccountEnabled" }
+  { key: "entraGivenName" },
+  { key: "entraSurname" },
+  { key: "entraAccountEnabled" },
+  { key: "entraJobTitle" },
+  { key: "entraDepartment" },
+  { key: "entraOffice" },
+  { key: "entraCompany" },
+  { key: "entraEmployeeId" },
+  { key: "entraGroups" },
+  { key: "payrollMatchStatus" },
+  { key: "payrollEmployeeId" },
+  { key: "payrollJobTitle" },
+  { key: "payrollDepartment" },
+  { key: "payrollLocation" }
 ];
 
 function argValue(name) {
@@ -29,6 +44,7 @@ async function readUpKeepUsers(filePath) {
 }
 
 async function main() {
+  loadDotEnv();
   const upkeepPath = path.resolve(
     argValue("--upkeep") ?? "data/generated/upkeep-users.json"
   );
@@ -40,8 +56,13 @@ async function main() {
   const entraUsers = entraCsvPath
     ? await readEntraUsersFromCsv(path.resolve(entraCsvPath))
     : await fetchEntraUsersFromGraph();
+  const payrollCsvPath = argValue("--payroll-csv");
+  const includePayroll = payrollCsvPath || process.env.PAYROLL_SQL_CONNECTION_STRING;
+  const payrollUsers = includePayroll
+    ? await loadPayrollUsers({ csvPath: payrollCsvPath ? path.resolve(payrollCsvPath) : null })
+    : [];
 
-  const rows = diffUsers(upkeepUsers, entraUsers);
+  const rows = diffUsers(upkeepUsers, entraUsers, payrollUsers);
   const summary = summarizeDiff(rows);
   const timestamp = new Date().toISOString();
 

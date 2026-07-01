@@ -646,6 +646,37 @@ button {
   font-size: 12px;
 }
 
+.payroll-strip {
+  border-top: 1px solid var(--border);
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 16px;
+  padding-top: 14px;
+}
+
+.payroll-strip div {
+  background: var(--surface-muted);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: grid;
+  gap: 3px;
+  min-height: 66px;
+  padding: 10px;
+}
+
+.payroll-strip span {
+  color: var(--text);
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.payroll-strip small {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.25;
+}
+
 .readiness-footer {
   margin-top: 14px;
   border-top: 1px solid var(--border);
@@ -987,6 +1018,33 @@ button {
   margin-top: 12px;
   display: grid;
   gap: 10px;
+}
+
+.compact-list {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0;
+}
+
+.compact-row {
+  align-items: center;
+  background: var(--surface-muted);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  min-height: 42px;
+  padding: 10px 12px;
+}
+
+.compact-row span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.compact-row strong {
+  color: var(--text);
+  font-size: 18px;
 }
 
 .bucket-row {

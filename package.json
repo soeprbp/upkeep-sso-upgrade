@@ -19,11 +19,16 @@
     "users:reconcile": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/reconcile-users.ps1",
     "upkeep:apply-user-updates": "node scripts/apply-upkeep-user-updates.mjs",
     "ad:probe": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/export-ad-users.ps1 -Probe",
-    "ad:users": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/export-ad-users.ps1 -AllUpKeepUsers"
+    "ad:users": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/export-ad-users.ps1 -AllUpKeepUsers",
+    "payroll:lookup": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/query-payroll-users.ps1",
+    "payroll:missing-ad": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/query-payroll-users.ps1 -FromMissingAdUsers",
+    "upkeep:inventory": "node scripts/fetch-upkeep-inventory.mjs",
+    "upkeep:propose-user-updates": "node scripts/propose-upkeep-user-updates.mjs"
   },
   "dependencies": {
     "jszip": "^3.10.1",
     "lucide-react": "^0.542.0",
+    "mssql": "^12.6.0",
     "next": "^15.4.5",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"

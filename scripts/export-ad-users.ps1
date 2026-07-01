@@ -53,6 +53,29 @@ function Escape-LdapFilterValue {
   return $escaped
 }
 
+function Get-CommonNameFromDn {
+  param([string]$DistinguishedName)
+  if ([string]::IsNullOrWhiteSpace($DistinguishedName)) {
+    return ""
+  }
+
+  $match = [regex]::Match($DistinguishedName, '^CN=((?:\\.|[^,])+)')
+  if (-not $match.Success) {
+    return $DistinguishedName
+  }
+
+  return $match.Groups[1].Value.Replace('\,', ',')
+}
+
+function Join-Values {
+  param([object[]]$Values)
+  $items = @($Values) |
+    Where-Object { $null -ne $_ -and -not [string]::IsNullOrWhiteSpace([string]$_) } |
+    ForEach-Object { [string]$_ }
+
+  return ($items -join ";")
+}
+
 function Get-EmailsFromCsv {
   param([string]$Path)
   if (-not (Test-Path -LiteralPath $Path)) {
@@ -127,15 +150,40 @@ function ConvertTo-AdRecord {
   $userPrincipalName = First-PropertyValue -Object $User -Names @("userPrincipalName", "UserPrincipalName")
   $samAccountName = First-PropertyValue -Object $User -Names @("sAMAccountName", "SamAccountName")
   $distinguishedName = First-PropertyValue -Object $User -Names @("distinguishedName", "DistinguishedName")
+  $givenName = First-PropertyValue -Object $User -Names @("givenName", "GivenName")
+  $surname = First-PropertyValue -Object $User -Names @("sn", "Surname")
+  $jobTitle = First-PropertyValue -Object $User -Names @("title", "Title")
+  $department = First-PropertyValue -Object $User -Names @("department", "Department")
+  $office = First-PropertyValue -Object $User -Names @("physicalDeliveryOfficeName", "Office")
+  $company = First-PropertyValue -Object $User -Names @("company", "Company")
+  $employeeId = First-PropertyValue -Object $User -Names @("employeeID", "EmployeeID")
+  $manager = First-PropertyValue -Object $User -Names @("manager", "Manager")
+  $memberOf = @()
+  if ($null -ne $User.PSObject.Properties["memberOf"]) {
+    $memberOf = @($User.PSObject.Properties["memberOf"].Value)
+  } elseif ($null -ne $User.PSObject.Properties["MemberOf"]) {
+    $memberOf = @($User.PSObject.Properties["MemberOf"].Value)
+  }
+  $groupNames = $memberOf | ForEach-Object { Get-CommonNameFromDn ([string]$_) } | Where-Object { $_ } | Sort-Object -Unique
 
   [pscustomobject]@{
     id = [string](First-Value @($objectGuid, ""))
     displayName = [string](First-Value @($displayName, ""))
+    givenName = [string](First-Value @($givenName, ""))
+    surname = [string](First-Value @($surname, ""))
     mail = [string](First-Value @($mail, $LookupEmail))
     userPrincipalName = [string](First-Value @($userPrincipalName, ""))
     accountEnabled = [string]$enabled
     samAccountName = [string](First-Value @($samAccountName, ""))
     distinguishedName = [string](First-Value @($distinguishedName, ""))
+    jobTitle = [string](First-Value @($jobTitle, ""))
+    department = [string](First-Value @($department, ""))
+    office = [string](First-Value @($office, ""))
+    company = [string](First-Value @($company, ""))
+    employeeId = [string](First-Value @($employeeId, ""))
+    manager = [string](First-Value @($manager, ""))
+    memberOf = (Join-Values $memberOf)
+    adGroups = (Join-Values $groupNames)
     lookupEmail = $LookupEmail
     adLookupStatus = "matched"
     adLookupSource = $Source
@@ -145,7 +193,7 @@ function ConvertTo-AdRecord {
 function Find-WithActiveDirectoryModule {
   param([string]$LookupEmail)
   $escaped = $LookupEmail.Replace("'", "''")
-  Get-ADUser -Filter "mail -eq '$escaped' -or userPrincipalName -eq '$escaped'" -Properties mail,userPrincipalName,displayName,Enabled |
+  Get-ADUser -Filter "mail -eq '$escaped' -or userPrincipalName -eq '$escaped'" -Properties mail,userPrincipalName,displayName,givenName,sn,title,department,physicalDeliveryOfficeName,company,employeeID,manager,memberOf,Enabled |
     Select-Object -First 1
 }
 
@@ -165,7 +213,16 @@ function Find-WithDirectorySearcher {
     "userPrincipalName",
     "sAMAccountName",
     "distinguishedName",
-    "userAccountControl"
+    "userAccountControl",
+    "givenName",
+    "sn",
+    "title",
+    "department",
+    "physicalDeliveryOfficeName",
+    "company",
+    "employeeID",
+    "manager",
+    "memberOf"
   ) | ForEach-Object { [void]$searcher.PropertiesToLoad.Add($_) }
 
   $result = $searcher.FindOne()
@@ -187,6 +244,15 @@ function Find-WithDirectorySearcher {
     sAMAccountName = if ($properties["samaccountname"].Count -gt 0) { [string]$properties["samaccountname"][0] } else { "" }
     distinguishedName = if ($properties["distinguishedname"].Count -gt 0) { [string]$properties["distinguishedname"][0] } else { "" }
     userAccountControl = if ($properties["useraccountcontrol"].Count -gt 0) { [int]$properties["useraccountcontrol"][0] } else { $null }
+    givenName = if ($properties["givenname"].Count -gt 0) { [string]$properties["givenname"][0] } else { "" }
+    sn = if ($properties["sn"].Count -gt 0) { [string]$properties["sn"][0] } else { "" }
+    title = if ($properties["title"].Count -gt 0) { [string]$properties["title"][0] } else { "" }
+    department = if ($properties["department"].Count -gt 0) { [string]$properties["department"][0] } else { "" }
+    physicalDeliveryOfficeName = if ($properties["physicaldeliveryofficename"].Count -gt 0) { [string]$properties["physicaldeliveryofficename"][0] } else { "" }
+    company = if ($properties["company"].Count -gt 0) { [string]$properties["company"][0] } else { "" }
+    employeeID = if ($properties["employeeid"].Count -gt 0) { [string]$properties["employeeid"][0] } else { "" }
+    manager = if ($properties["manager"].Count -gt 0) { [string]$properties["manager"][0] } else { "" }
+    memberOf = @($properties["memberof"])
   }
 }
 

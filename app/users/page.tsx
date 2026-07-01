@@ -8,6 +8,7 @@ import {
   UsersRound
 } from "lucide-react";
 import Link from "next/link";
+import { upkeepInventorySummary } from "../../data/upkeep-inventory-summary.js";
 import { userReadinessSummary } from "../../data/user-readiness-summary.js";
 
 function formatDate(value: string | null) {
@@ -32,6 +33,7 @@ function segmentStyle(value: number, total: number) {
 
 export default function UsersPage() {
   const summary = userReadinessSummary;
+  const inventory = upkeepInventorySummary;
   const total = summary.totals.upkeepUsers;
   const topActions = summary.actionBuckets.filter((bucket) => bucket.count > 0);
 
@@ -126,6 +128,42 @@ export default function UsersPage() {
               <span className="metric-label">Ready accounts</span>
             </div>
           </div>
+          <div className="payroll-strip">
+            <div>
+              <span>{summary.totals.missingAdPayrollActive}</span>
+              <small>active payroll, no AD</small>
+            </div>
+            <div>
+              <span>{summary.totals.missingAdPayrollInactive}</span>
+              <small>inactive payroll</small>
+            </div>
+            <div>
+              <span>{summary.totals.missingAdPayrollNotFound}</span>
+              <small>not found in payroll</small>
+            </div>
+          </div>
+        </article>
+
+        <article className="panel">
+          <div className="panel-head">
+            <div>
+              <p className="section-label">UpKeep inventory</p>
+              <h3>Current account types</h3>
+            </div>
+            <UsersRound size={16} />
+          </div>
+          <div className="compact-list">
+            {inventory.accountTypes.map((item) => (
+              <div key={item.label} className="compact-row">
+                <span>{item.label}</span>
+                <strong>{item.count}</strong>
+              </div>
+            ))}
+          </div>
+          <p className="panel-copy">
+            UpKeep currently has {inventory.locations.total} locations available for
+            group-driven mapping.
+          </p>
         </article>
 
         <article className="panel panel-lg">

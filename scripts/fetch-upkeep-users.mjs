@@ -9,6 +9,8 @@ const columns = [
   { key: "displayName", header: "displayName" },
   { key: "firstName", header: "firstName" },
   { key: "lastName", header: "lastName" },
+  { key: "jobTitle", header: "jobTitle" },
+  { key: "accountType", header: "accountType" },
   { key: "role", header: "role" },
   { key: "status", header: "status" }
 ];

@@ -1,5 +1,5 @@
 export const userReadinessSummary = {
-  "generatedAt": "2026-07-01T16:09:39.852Z",
+  "generatedAt": "2026-07-01T18:07:38.945Z",
   "source": "Local UpKeep export compared with local AD lookup",
   "totals": {
     "upkeepUsers": 54,
@@ -7,7 +7,10 @@ export const userReadinessSummary = {
     "needsAction": 17,
     "missingUpkeepEmail": 0,
     "missingAdUser": 8,
-    "disabledAdUser": 9
+    "disabledAdUser": 9,
+    "missingAdPayrollActive": 7,
+    "missingAdPayrollInactive": 0,
+    "missingAdPayrollNotFound": 1
   },
   "readinessPercent": 69,
   "chartSegments": [

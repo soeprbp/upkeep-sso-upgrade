@@ -35,6 +35,9 @@ npm run dev
 - `npm run upkeep:apply-user-updates -- --file updates.csv --apply` - applies reviewed UpKeep user PATCH requests
 - `npm run ad:probe` - checks the local Windows domain lookup method available on this machine
 - `npm run ad:users` - looks up exported UpKeep user emails in local AD and writes `data/generated/ad-users.csv`
+- `npm run payroll:missing-ad` - read-only SQL Server lookup for users missing from AD
+- `npm run upkeep:inventory` - summarizes current UpKeep account types and locations from the API
+- `npm run upkeep:propose-user-updates` - builds a review CSV for UpKeep name, title, account type, and location mapping updates
 
 ## UpKeep and Entra user workflow
 
@@ -64,6 +67,32 @@ npm run users:reconcile
 
 Raw user exports and diffs are written under `data/generated/`, which is intentionally ignored by git because it may contain names and email addresses. The tracked dashboard summary in `data/user-readiness-summary.js` contains counts only.
 
+## Payroll SQL Lookup
+
+Payroll data is read-only. The lookup script only runs parameterized `SELECT` statements against `SVWPDBS04` and writes local output under ignored `data/generated/`.
+
+Set the payroll database name locally:
+
+```env
+PAYROLL_SQL_SERVER=SVWPDBS04
+PAYROLL_SQL_DATABASE=<database-name>
+PAYROLL_SQL_TABLE=EMP_INFO
+```
+
+Then run:
+
+```powershell
+npm run payroll:missing-ad
+```
+
+The current lookup shape is equivalent to:
+
+```sql
+SELECT TOP (...) *
+FROM EMP_INFO
+WHERE last_name = @lastName
+```
+
 You can also check a few addresses directly before exporting the whole UpKeep list:
 
 ```powershell
@@ -86,7 +115,13 @@ npm run upkeep:users -- /users
 
 The diff output is written under `data/generated/`, which is intentionally ignored by git because it may contain user information.
 
-User update CSVs must include `upkeepId` or `id`. Supported update columns are `email`, `accountType`, `firstName`, `lastName`, `phoneNumber`, and `isLocationBased`. The update command is dry-run unless `--apply` is present.
+User update CSVs must include `upkeepId` or `id`. Supported update columns are `email`, `accountType`, `firstName`, `lastName`, `jobTitle`, `phoneNumber`, and `isLocationBased`. The update command is dry-run unless `--apply` is present.
+
+Use `config/upkeep-group-mapping.example.json` as the starting point for AD group mapping. The proposal command writes a review file under ignored `data/generated/`:
+
+```bash
+npm run upkeep:propose-user-updates
+```
 
 ## Simple page auth
 

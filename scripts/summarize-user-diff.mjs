@@ -17,6 +17,17 @@ async function main() {
   const missingUpkeepEmail = count(rows, "missing_upkeep_email");
   const missingAdUser = count(rows, "missing_entra_user");
   const disabledAdUser = count(rows, "disabled_entra_user");
+  const missingAdPayrollActive = rows.filter(
+    (row) => row.status === "missing_entra_user" && row.payrollMatchStatus === "active"
+  ).length;
+  const missingAdPayrollNotFound = rows.filter(
+    (row) =>
+      row.status === "missing_entra_user" &&
+      (!row.payrollMatchStatus || row.payrollMatchStatus === "not_checked_or_not_found")
+  ).length;
+  const missingAdPayrollInactive = rows.filter(
+    (row) => row.status === "missing_entra_user" && row.payrollMatchStatus === "inactive"
+  ).length;
   const upkeepUsers = rows.length;
   const needsAction = missingUpkeepEmail + missingAdUser + disabledAdUser;
   const readinessPercent =
@@ -31,7 +42,10 @@ async function main() {
       needsAction,
       missingUpkeepEmail,
       missingAdUser,
-      disabledAdUser
+      disabledAdUser,
+      missingAdPayrollActive,
+      missingAdPayrollInactive,
+      missingAdPayrollNotFound
     },
     readinessPercent,
     chartSegments: [

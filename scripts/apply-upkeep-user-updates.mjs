@@ -7,6 +7,7 @@ const allowedFields = [
   "accountType",
   "firstName",
   "lastName",
+  "jobTitle",
   "phoneNumber",
   "isLocationBased"
 ];

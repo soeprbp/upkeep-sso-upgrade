@@ -8,6 +8,9 @@ export type UserReadinessSummary = {
     missingUpkeepEmail: number;
     missingAdUser: number;
     disabledAdUser: number;
+    missingAdPayrollActive: number;
+    missingAdPayrollInactive: number;
+    missingAdPayrollNotFound: number;
   };
   readinessPercent: number;
   chartSegments: Array<{
