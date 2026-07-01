@@ -25,6 +25,39 @@ npm run dev
 - `npm run check:format` - Prettier check
 - `npm run test` - validates the rollout data model
 - `npm run extract:plan -- <path-to-docx>` - extracts paragraphs and a structured rollout JSON model from a Word document
+- `npm run upkeep:smoke` - authenticates to UpKeep and verifies the known API v2 session-token flow
+- `npm run upkeep:users` - fetches UpKeep users into `data/generated/upkeep-users.json` and `.csv`
+- `npm run users:diff -- --entra-csv <entra-export.csv>` - compares UpKeep users with an Entra user export
+- `npm run users:diff` - compares UpKeep users with Microsoft Graph using `AZURE_*` app credentials
+- `npm run upkeep:apply-user-updates -- --file updates.csv` - previews UpKeep user PATCH requests
+- `npm run upkeep:apply-user-updates -- --file updates.csv --apply` - applies reviewed UpKeep user PATCH requests
+
+## UpKeep and Entra user workflow
+
+The reference dashboard uses the working UpKeep API v2 pattern:
+
+1. `POST https://api.onupkeep.com/api/v2/auth` with `UPKEEP_EMAIL` and `UPKEEP_PASSWORD`
+2. Read `result.sessionToken`
+3. Send `Session-Token: <token>` on follow-up API requests
+
+This repo keeps that same connector pattern in `lib/upkeep-client.mjs`. Put secrets in `.env.local`, never in committed files.
+
+```bash
+copy .env.example .env.local
+npm run upkeep:smoke
+npm run upkeep:users
+npm run users:diff -- --entra-csv C:\path\to\entra-users.csv
+```
+
+If UpKeep exposes the user list at a tenant-specific path, set `UPKEEP_USERS_ENDPOINT` in `.env.local` or pass it to the fetch script:
+
+```bash
+npm run upkeep:users -- /users
+```
+
+The diff output is written under `data/generated/`, which is intentionally ignored by git because it may contain user information.
+
+User update CSVs must include `upkeepId` or `id`. Supported update columns are `email`, `accountType`, `firstName`, `lastName`, `phoneNumber`, and `isLocationBased`. The update command is dry-run unless `--apply` is present.
 
 ## GitHub Pages
 

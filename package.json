@@ -11,7 +11,11 @@
     "format": "prettier --write .",
     "check:format": "prettier --check .",
     "test": "node scripts/validate-plan.mjs",
-    "extract:plan": "node scripts/extract-plan.mjs"
+    "extract:plan": "node scripts/extract-plan.mjs",
+    "upkeep:smoke": "node scripts/upkeep-smoke.mjs",
+    "upkeep:users": "node scripts/fetch-upkeep-users.mjs",
+    "users:diff": "node scripts/diff-users.mjs",
+    "upkeep:apply-user-updates": "node scripts/apply-upkeep-user-updates.mjs"
   },
   "dependencies": {
     "jszip": "^3.10.1",
