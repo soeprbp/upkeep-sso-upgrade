@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import {
   ArrowRight,
   BadgeCheck,
@@ -22,16 +23,17 @@ import {
 } from "lucide-react";
 import {
   communicationPlan,
-  readinessMetrics,
   risks,
   rolloutPhases,
   sourceSummary,
   technicalChecklist
 } from "../data/implementation-plan.js";
+import { userReadinessSummary } from "../data/user-readiness-summary.js";
 
 const navItems = [
   { label: "Overview", icon: LayoutDashboard, active: false },
   { label: "Timeline", icon: CalendarRange, active: true },
+  { label: "Users", icon: UsersRound, active: false, href: "/users" },
   { label: "Risks", icon: ShieldAlert, active: false },
   { label: "Docs", icon: FileText, active: false },
   { label: "GitHub", icon: Github, active: false },
@@ -119,17 +121,17 @@ export default function Page() {
           {navItems.map((item) => {
             const Icon = item.icon;
             return (
-              <button
+              <Link
                 key={item.label}
                 className={`nav-item ${item.active ? "nav-item-active" : ""}`}
-                type="button"
+                href={item.href ?? "#"}
               >
                 <span className="nav-item-left">
                   <Icon size={16} />
                   <span>{item.label}</span>
                 </span>
                 <ChevronRight size={14} />
-              </button>
+              </Link>
             );
           })}
         </nav>
@@ -311,17 +313,27 @@ export default function Page() {
             </div>
 
             <div className="readiness-grid">
-              {readinessMetrics.map((metric) => (
-                <div key={metric.label} className="metric-card">
-                  <span className="metric-value">{metric.value}</span>
-                  <span className="metric-label">{metric.label}</span>
-                </div>
-              ))}
+              <div className="metric-card">
+                <span className="metric-value">{userReadinessSummary.totals.upkeepUsers || "~110"}</span>
+                <span className="metric-label">UpKeep users</span>
+              </div>
+              <div className="metric-card">
+                <span className="metric-value">{userReadinessSummary.readinessPercent}%</span>
+                <span className="metric-label">AD match readiness</span>
+              </div>
+              <div className="metric-card">
+                <span className="metric-value">{userReadinessSummary.totals.matched}</span>
+                <span className="metric-label">Matched AD users</span>
+              </div>
+              <div className="metric-card">
+                <span className="metric-value">{userReadinessSummary.totals.needsAction}</span>
+                <span className="metric-label">Need action</span>
+              </div>
             </div>
 
             <div className="readiness-footer">
-              <strong>Total users in scope: 110</strong>
-              <a href="#tech">View details</a>
+              <strong>{userReadinessSummary.source}</strong>
+              <Link href="/users">View users page</Link>
             </div>
           </article>
 

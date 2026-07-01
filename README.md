@@ -29,6 +29,8 @@ npm run dev
 - `npm run upkeep:users` - fetches UpKeep users into `data/generated/upkeep-users.json` and `.csv`
 - `npm run users:diff -- --entra-csv <entra-export.csv>` - compares UpKeep users with an Entra user export
 - `npm run users:diff` - compares UpKeep users with Microsoft Graph using `AZURE_*` app credentials
+- `npm run users:summary` - updates the committed dashboard summary using only non-PII counts
+- `npm run users:reconcile` - runs UpKeep export, local AD lookup, diff, and sanitized summary generation
 - `npm run upkeep:apply-user-updates -- --file updates.csv` - previews UpKeep user PATCH requests
 - `npm run upkeep:apply-user-updates -- --file updates.csv --apply` - applies reviewed UpKeep user PATCH requests
 - `npm run ad:probe` - checks the local Windows domain lookup method available on this machine
@@ -51,7 +53,16 @@ npm run upkeep:users
 npm run ad:probe
 npm run ad:users
 npm run users:diff -- --entra-csv data\generated\ad-users.csv
+npm run users:summary
 ```
+
+For the standard first pass, run:
+
+```bash
+npm run users:reconcile
+```
+
+Raw user exports and diffs are written under `data/generated/`, which is intentionally ignored by git because it may contain names and email addresses. The tracked dashboard summary in `data/user-readiness-summary.js` contains counts only.
 
 You can also check a few addresses directly before exporting the whole UpKeep list:
 
@@ -76,6 +87,15 @@ npm run upkeep:users -- /users
 The diff output is written under `data/generated/`, which is intentionally ignored by git because it may contain user information.
 
 User update CSVs must include `upkeepId` or `id`. Supported update columns are `email`, `accountType`, `firstName`, `lastName`, `phoneNumber`, and `isLocationBased`. The update command is dry-run unless `--apply` is present.
+
+## Simple page auth
+
+The static pages use a lightweight client-side gate for casual access control. Defaults are:
+
+- Username: `bsoper`
+- Password: configured by `NEXT_PUBLIC_BASIC_AUTH_PASSWORD_SHA256`
+
+Before publishing broadly, replace `NEXT_PUBLIC_BASIC_AUTH_PASSWORD_SHA256` in the build environment with a SHA-256 hash of the desired password. This is not a replacement for real server-side authentication, but it keeps the dashboard from being casually browsed.
 
 ## GitHub Pages
 

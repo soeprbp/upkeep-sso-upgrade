@@ -15,6 +15,8 @@
     "upkeep:smoke": "node scripts/upkeep-smoke.mjs",
     "upkeep:users": "node scripts/fetch-upkeep-users.mjs",
     "users:diff": "node scripts/diff-users.mjs",
+    "users:summary": "node scripts/summarize-user-diff.mjs",
+    "users:reconcile": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/reconcile-users.ps1",
     "upkeep:apply-user-updates": "node scripts/apply-upkeep-user-updates.mjs",
     "ad:probe": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/export-ad-users.ps1 -Probe",
     "ad:users": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/export-ad-users.ps1 -AllUpKeepUsers"
