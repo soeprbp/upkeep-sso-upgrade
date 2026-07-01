@@ -67,7 +67,7 @@ Raw user exports and diffs are written under `data/generated/`, which is intenti
 You can also check a few addresses directly before exporting the whole UpKeep list:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts\export-ad-users.ps1 -Email user@welchpkg.com
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\export-ad-users.ps1 -Email <email-address>
 ```
 
 For a manually exported Entra CSV instead of local AD:
