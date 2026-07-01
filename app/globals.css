@@ -1005,6 +1005,11 @@ button {
   background: var(--red);
 }
 
+.segment-danger,
+.legend-swatch.segment-danger {
+  background: #7f1d1d;
+}
+
 .segment-watch,
 .legend-swatch.segment-watch {
   background: #d98c16;
@@ -1112,6 +1117,11 @@ button {
 
 .bucket-risk {
   border-color: #f5c7c3;
+}
+
+.bucket-danger {
+  border-color: #ef9a9a;
+  background: #fff5f5;
 }
 
 .bucket-watch {

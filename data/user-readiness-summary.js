@@ -1,5 +1,5 @@
 export const userReadinessSummary = {
-  "generatedAt": "2026-07-01T18:33:02.593Z",
+  "generatedAt": "2026-07-01T19:44:33.016Z",
   "source": "Local UpKeep export compared with local AD lookup",
   "totals": {
     "upkeepUsers": 54,
@@ -7,7 +7,8 @@ export const userReadinessSummary = {
     "needsAction": 17,
     "missingUpkeepEmail": 0,
     "missingAdUser": 8,
-    "disabledAdUser": 9,
+    "disabledAdUser": 6,
+    "terminatedPayrollUser": 3,
     "missingAdPayrollActive": 7,
     "missingAdPayrollInactive": 0,
     "missingAdPayrollNotFound": 1
@@ -26,13 +27,18 @@ export const userReadinessSummary = {
       "className": "segment-good"
     },
     {
+      "label": "Terminated payroll",
+      "value": 3,
+      "className": "segment-danger"
+    },
+    {
       "label": "Missing AD user",
       "value": 8,
       "className": "segment-risk"
     },
     {
       "label": "Disabled AD user",
-      "value": 9,
+      "value": 6,
       "className": "segment-watch"
     },
     {
@@ -49,6 +55,12 @@ export const userReadinessSummary = {
       "description": "UpKeep account has a matching enabled AD identity."
     },
     {
+      "label": "Disable in UpKeep",
+      "count": 3,
+      "tone": "danger",
+      "description": "Payroll status is inactive or terminated."
+    },
+    {
       "label": "Create or migrate AD identity",
       "count": 8,
       "tone": "risk",
@@ -56,7 +68,7 @@ export const userReadinessSummary = {
     },
     {
       "label": "Enable or replace AD identity",
-      "count": 9,
+      "count": 6,
       "tone": "watch",
       "description": "AD account exists but is disabled."
     },

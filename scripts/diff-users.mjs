@@ -28,6 +28,7 @@ const columns = [
   { key: "entraGroups" },
   { key: "payrollMatchStatus" },
   { key: "payrollEmployeeId" },
+  { key: "payrollStatus" },
   { key: "payrollJobTitle" },
   { key: "payrollDepartment" },
   { key: "payrollLocation" }

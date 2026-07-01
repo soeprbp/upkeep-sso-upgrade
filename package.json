@@ -22,6 +22,7 @@
     "ad:users": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/export-ad-users.ps1 -AllUpKeepUsers",
     "payroll:lookup": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/query-payroll-users.ps1",
     "payroll:missing-ad": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/query-payroll-users.ps1 -FromMissingAdUsers",
+    "payroll:upkeep-users": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/query-payroll-users.ps1 -FromAllUpKeepUsers",
     "upkeep:inventory": "node scripts/fetch-upkeep-inventory.mjs",
     "upkeep:coverage": "node scripts/diagnose-upkeep-user-coverage.mjs",
     "upkeep:propose-user-updates": "node scripts/propose-upkeep-user-updates.mjs"

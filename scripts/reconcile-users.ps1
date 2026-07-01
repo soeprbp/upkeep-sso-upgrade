@@ -23,7 +23,7 @@ Invoke-NpmStep "Looking up UpKeep user emails in local AD..." @("run", "ad:users
 Invoke-NpmStep "Comparing UpKeep users with local AD lookup results..." @("run", "users:diff", "--", "--entra-csv", "data\generated\ad-users.csv")
 
 if (-not [string]::IsNullOrWhiteSpace($env:PAYROLL_SQL_DATABASE)) {
-    Invoke-NpmStep "Looking up missing AD users in payroll SQL read-only..." @("run", "payroll:missing-ad")
+    Invoke-NpmStep "Looking up UpKeep users in payroll SQL read-only..." @("run", "payroll:upkeep-users")
     Invoke-NpmStep "Adding payroll matches to the user diff..." @("run", "users:diff", "--", "--entra-csv", "data\generated\ad-users.csv", "--payroll-csv", "data\generated\payroll-users.csv")
 } else {
     Write-Host "Skipping payroll SQL lookup because PAYROLL_SQL_DATABASE is not set."

@@ -17,6 +17,7 @@ async function main() {
   const missingUpkeepEmail = count(rows, "missing_upkeep_email");
   const missingAdUser = count(rows, "missing_entra_user");
   const disabledAdUser = count(rows, "disabled_entra_user");
+  const terminatedPayrollUser = count(rows, "terminated_payroll_user");
   const missingAdPayrollActive = rows.filter(
     (row) => row.status === "missing_entra_user" && row.payrollMatchStatus === "active"
   ).length;
@@ -29,7 +30,7 @@ async function main() {
     (row) => row.status === "missing_entra_user" && row.payrollMatchStatus === "inactive"
   ).length;
   const upkeepUsers = rows.length;
-  const needsAction = missingUpkeepEmail + missingAdUser + disabledAdUser;
+  const needsAction = missingUpkeepEmail + missingAdUser + disabledAdUser + terminatedPayrollUser;
   const readinessPercent =
     upkeepUsers === 0 ? 0 : Math.round((matched / upkeepUsers) * 100);
 
@@ -43,6 +44,7 @@ async function main() {
       missingUpkeepEmail,
       missingAdUser,
       disabledAdUser,
+      terminatedPayrollUser,
       missingAdPayrollActive,
       missingAdPayrollInactive,
       missingAdPayrollNotFound
@@ -56,6 +58,7 @@ async function main() {
     readinessPercent,
     chartSegments: [
       { label: "Matched", value: matched, className: "segment-good" },
+      { label: "Terminated payroll", value: terminatedPayrollUser, className: "segment-danger" },
       { label: "Missing AD user", value: missingAdUser, className: "segment-risk" },
       { label: "Disabled AD user", value: disabledAdUser, className: "segment-watch" },
       { label: "Missing UpKeep email", value: missingUpkeepEmail, className: "segment-muted" }
@@ -66,6 +69,12 @@ async function main() {
         count: matched,
         tone: "good",
         description: "UpKeep account has a matching enabled AD identity."
+      },
+      {
+        label: "Disable in UpKeep",
+        count: terminatedPayrollUser,
+        tone: "danger",
+        description: "Payroll status is inactive or terminated."
       },
       {
         label: "Create or migrate AD identity",

@@ -8,6 +8,7 @@ export type UserReadinessSummary = {
     missingUpkeepEmail: number;
     missingAdUser: number;
     disabledAdUser: number;
+    terminatedPayrollUser: number;
     missingAdPayrollActive: number;
     missingAdPayrollInactive: number;
     missingAdPayrollNotFound: number;
@@ -27,7 +28,7 @@ export type UserReadinessSummary = {
   actionBuckets: Array<{
     label: string;
     count: number;
-    tone: "good" | "risk" | "watch" | "muted";
+    tone: "good" | "danger" | "risk" | "watch" | "muted";
     description: string;
   }>;
 };

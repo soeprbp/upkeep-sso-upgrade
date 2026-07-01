@@ -127,6 +127,10 @@ export default function UsersPage() {
           </div>
           <div className="readiness-grid">
             <div className="metric-card">
+              <span className="metric-value">{summary.totals.terminatedPayrollUser}</span>
+              <span className="metric-label">Terminated payroll</span>
+            </div>
+            <div className="metric-card">
               <span className="metric-value">{summary.totals.missingAdUser}</span>
               <span className="metric-label">Missing AD user</span>
             </div>

@@ -37,6 +37,7 @@ npm run dev
 - `npm run ad:probe` - checks the local Windows domain lookup method available on this machine
 - `npm run ad:users` - looks up exported UpKeep user emails in local AD and writes `data/generated/ad-users.csv`
 - `npm run payroll:missing-ad` - read-only SQL Server lookup for users missing from AD
+- `npm run payroll:upkeep-users` - read-only SQL Server lookup for all exported UpKeep users
 - `npm run upkeep:inventory` - summarizes current UpKeep account types and locations from the API
 - `npm run upkeep:propose-user-updates` - builds a review CSV for UpKeep name, title, account type, and location mapping updates
 
@@ -87,6 +88,8 @@ Then run:
 ```powershell
 npm run payroll:missing-ad
 ```
+
+Use `npm run payroll:upkeep-users` before the final diff when you need to flag UpKeep accounts tied to inactive or terminated payroll rows. Those accounts are surfaced as "Disable in UpKeep" remediation items.
 
 The current lookup shape is equivalent to:
 

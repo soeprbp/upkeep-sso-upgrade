@@ -4,8 +4,10 @@ param(
   [string]$Table = $env:PAYROLL_SQL_TABLE,
   [string]$OutputDir = "data/generated",
   [string]$InputDiff = "data/generated/user-diff.json",
+  [string]$UpKeepUsersJson = "data/generated/upkeep-users.json",
   [string[]]$LastName,
   [switch]$FromMissingAdUsers,
+  [switch]$FromAllUpKeepUsers,
   [int]$Top = 50
 )
 
@@ -89,6 +91,29 @@ function Get-LastNamesFromDiff {
     Sort-Object -Unique
 }
 
+function Get-LastNamesFromUpKeepUsers {
+  param([string]$Path)
+  if (-not (Test-Path -LiteralPath $Path)) {
+    throw "UpKeep users JSON not found: $Path. Run npm run upkeep:users first."
+  }
+
+  $payload = Get-Content -LiteralPath $Path -Raw | ConvertFrom-Json
+  @($payload.users) |
+    ForEach-Object {
+      $last = Normalize-LastName $_.lastName
+      if ($last) {
+        return $last
+      }
+
+      $displayName = [string]$_.displayName
+      if ($displayName -match '\S+\s+(\S+)$') {
+        return $Matches[1]
+      }
+    } |
+    Where-Object { $_ } |
+    Sort-Object -Unique
+}
+
 function New-ReadOnlyConnection {
   $builder = New-Object System.Data.SqlClient.SqlConnectionStringBuilder
   $builder["Data Source"] = $Server
@@ -130,9 +155,12 @@ if ($LastName) {
 if ($FromMissingAdUsers) {
   $names += Get-LastNamesFromDiff -Path $InputDiff
 }
+if ($FromAllUpKeepUsers) {
+  $names += Get-LastNamesFromUpKeepUsers -Path $UpKeepUsersJson
+}
 $names = $names | Where-Object { $_ } | Sort-Object -Unique
 if ($names.Count -eq 0) {
-  throw "No last names provided. Use -LastName or -FromMissingAdUsers."
+  throw "No last names provided. Use -LastName, -FromMissingAdUsers, or -FromAllUpKeepUsers."
 }
 
 New-Item -ItemType Directory -Force -Path $OutputDir | Out-Null
