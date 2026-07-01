@@ -1,5 +1,5 @@
 export const userReadinessSummary = {
-  "generatedAt": "2026-07-01T18:07:38.945Z",
+  "generatedAt": "2026-07-01T18:33:02.593Z",
   "source": "Local UpKeep export compared with local AD lookup",
   "totals": {
     "upkeepUsers": 54,
@@ -11,6 +11,12 @@ export const userReadinessSummary = {
     "missingAdPayrollActive": 7,
     "missingAdPayrollInactive": 0,
     "missingAdPayrollNotFound": 1
+  },
+  "coverage": {
+    "expectedMinimum": 117,
+    "actual": 54,
+    "status": "below_expected",
+    "message": "UpKeep returned 54 users, below expected minimum 117. Verify API credentials have whole-environment visibility."
   },
   "readinessPercent": 69,
   "chartSegments": [

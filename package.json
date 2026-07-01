@@ -23,6 +23,7 @@
     "payroll:lookup": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/query-payroll-users.ps1",
     "payroll:missing-ad": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/query-payroll-users.ps1 -FromMissingAdUsers",
     "upkeep:inventory": "node scripts/fetch-upkeep-inventory.mjs",
+    "upkeep:coverage": "node scripts/diagnose-upkeep-user-coverage.mjs",
     "upkeep:propose-user-updates": "node scripts/propose-upkeep-user-updates.mjs"
   },
   "dependencies": {

@@ -47,6 +47,12 @@ async function main() {
       missingAdPayrollInactive,
       missingAdPayrollNotFound
     },
+    coverage: payload.upkeepCoverage ?? {
+      expectedMinimum: 0,
+      actual: upkeepUsers,
+      status: "unknown",
+      message: "No UpKeep coverage metadata found."
+    },
     readinessPercent,
     chartSegments: [
       { label: "Matched", value: matched, className: "segment-good" },

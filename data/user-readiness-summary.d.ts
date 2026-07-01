@@ -12,6 +12,12 @@ export type UserReadinessSummary = {
     missingAdPayrollInactive: number;
     missingAdPayrollNotFound: number;
   };
+  coverage: {
+    expectedMinimum: number;
+    actual: number;
+    status: string;
+    message: string;
+  };
   readinessPercent: number;
   chartSegments: Array<{
     label: string;

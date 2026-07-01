@@ -955,6 +955,32 @@ button {
   gap: 16px;
 }
 
+.coverage-warning {
+  align-items: start;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 8px;
+  color: #7c2d12;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: auto minmax(0, 1fr);
+  margin-bottom: 16px;
+  padding: 14px 16px;
+}
+
+.coverage-warning div {
+  display: grid;
+  gap: 4px;
+}
+
+.coverage-warning strong {
+  color: #431407;
+}
+
+.coverage-warning span {
+  line-height: 1.45;
+}
+
 .stacked-chart {
   margin-top: 18px;
   height: 22px;

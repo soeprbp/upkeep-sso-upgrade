@@ -23,10 +23,20 @@ async function main() {
   const client = UpKeepClient.fromEnv();
   const users = (await client.listPaginated(endpoint)).map(normalizeUpKeepUser);
   const timestamp = new Date().toISOString();
+  const expectedMinimum = Number(process.env.UPKEEP_EXPECTED_MIN_USERS ?? 0);
+  const coverage = {
+    expectedMinimum,
+    actual: users.length,
+    status: expectedMinimum > 0 && users.length < expectedMinimum ? "below_expected" : "ok",
+    message:
+      expectedMinimum > 0 && users.length < expectedMinimum
+        ? `UpKeep returned ${users.length} users, below expected minimum ${expectedMinimum}. Verify API credentials have whole-environment visibility.`
+        : "UpKeep user export met the configured minimum."
+  };
 
   await fs.writeFile(
     path.join(outputDir, "upkeep-users.json"),
-    `${JSON.stringify({ extractedAt: timestamp, endpoint, users }, null, 2)}\n`,
+    `${JSON.stringify({ extractedAt: timestamp, endpoint, coverage, users }, null, 2)}\n`,
     "utf8"
   );
   await fs.writeFile(
@@ -36,6 +46,9 @@ async function main() {
   );
 
   console.log(`Fetched ${users.length} UpKeep users from ${endpoint}.`);
+  if (coverage.status !== "ok") {
+    console.warn(coverage.message);
+  }
   console.log(`Wrote ${path.join(outputDir, "upkeep-users.json")}`);
   console.log(`Wrote ${path.join(outputDir, "upkeep-users.csv")}`);
 }

@@ -36,6 +36,7 @@ export default function UsersPage() {
   const inventory = upkeepInventorySummary;
   const total = summary.totals.upkeepUsers;
   const topActions = summary.actionBuckets.filter((bucket) => bucket.count > 0);
+  const hasCoverageWarning = summary.coverage?.status === "below_expected";
 
   return (
     <main className="users-page">
@@ -69,6 +70,20 @@ export default function UsersPage() {
           <span>UpKeep users checked</span>
         </div>
       </section>
+
+      {hasCoverageWarning ? (
+        <section className="coverage-warning">
+          <AlertTriangle size={18} />
+          <div>
+            <strong>UpKeep user export is below expected coverage.</strong>
+            <span>
+              API returned {summary.coverage.actual} users; expected at least{" "}
+              {summary.coverage.expectedMinimum}. Verify the API account can see the
+              whole UpKeep environment, not just one business unit.
+            </span>
+          </div>
+        </section>
+      ) : null}
 
       <section className="users-grid">
         <article className="panel panel-lg">

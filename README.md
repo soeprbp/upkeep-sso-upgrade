@@ -27,6 +27,7 @@ npm run dev
 - `npm run extract:plan -- <path-to-docx>` - extracts paragraphs and a structured rollout JSON model from a Word document
 - `npm run upkeep:smoke` - authenticates to UpKeep and verifies the known API v2 session-token flow
 - `npm run upkeep:users` - fetches UpKeep users into `data/generated/upkeep-users.json` and `.csv`
+- `npm run upkeep:coverage` - checks whether the current UpKeep API account can see the expected whole-environment user count
 - `npm run users:diff -- --entra-csv <entra-export.csv>` - compares UpKeep users with an Entra user export
 - `npm run users:diff` - compares UpKeep users with Microsoft Graph using `AZURE_*` app credentials
 - `npm run users:summary` - updates the committed dashboard summary using only non-PII counts
@@ -66,6 +67,8 @@ npm run users:reconcile
 ```
 
 Raw user exports and diffs are written under `data/generated/`, which is intentionally ignored by git because it may contain names and email addresses. The tracked dashboard summary in `data/user-readiness-summary.js` contains counts only.
+
+Set `UPKEEP_EXPECTED_MIN_USERS=117` locally to flag partial exports. If `npm run upkeep:coverage` reports fewer users, verify the UpKeep API login has visibility to the whole environment rather than a single business unit.
 
 ## Payroll SQL Lookup
 

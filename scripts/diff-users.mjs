@@ -40,7 +40,10 @@ function argValue(name) {
 
 async function readUpKeepUsers(filePath) {
   const payload = JSON.parse(await fs.readFile(filePath, "utf8"));
-  return Array.isArray(payload) ? payload : payload.users ?? [];
+  return {
+    users: Array.isArray(payload) ? payload : payload.users ?? [],
+    coverage: Array.isArray(payload) ? null : payload.coverage ?? null
+  };
 }
 
 async function main() {
@@ -52,7 +55,8 @@ async function main() {
   const outputDir = path.resolve(process.cwd(), "data/generated");
   await fs.mkdir(outputDir, { recursive: true });
 
-  const upkeepUsers = await readUpKeepUsers(upkeepPath);
+  const upkeepPayload = await readUpKeepUsers(upkeepPath);
+  const upkeepUsers = upkeepPayload.users;
   const entraUsers = entraCsvPath
     ? await readEntraUsersFromCsv(path.resolve(entraCsvPath))
     : await fetchEntraUsersFromGraph();
@@ -68,7 +72,7 @@ async function main() {
 
   await fs.writeFile(
     path.join(outputDir, "user-diff.json"),
-    `${JSON.stringify({ generatedAt: timestamp, summary, rows }, null, 2)}\n`,
+    `${JSON.stringify({ generatedAt: timestamp, upkeepCoverage: upkeepPayload.coverage, summary, rows }, null, 2)}\n`,
     "utf8"
   );
   await fs.writeFile(path.join(outputDir, "user-diff.csv"), toCsv(rows, columns), "utf8");
