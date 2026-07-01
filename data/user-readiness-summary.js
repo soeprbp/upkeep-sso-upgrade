@@ -1,5 +1,5 @@
 export const userReadinessSummary = {
-  "generatedAt": "2026-07-01T19:44:33.016Z",
+  "generatedAt": "2026-07-01T20:00:39.811Z",
   "source": "Local UpKeep export compared with local AD lookup",
   "totals": {
     "upkeepUsers": 54,
