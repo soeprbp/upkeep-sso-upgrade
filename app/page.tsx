@@ -143,10 +143,10 @@ export default function Page() {
           </button>
 
           <div className="user-card">
-            <div className="avatar">JB</div>
+            <div className="avatar">BS</div>
             <div className="user-copy">
-              <strong>Justin Baker</strong>
-              <span>Project Owner</span>
+              <strong>Brent Soper</strong>
+              <span>Welch Packaging</span>
             </div>
           </div>
         </div>
