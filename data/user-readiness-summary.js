@@ -1,0 +1,82 @@
+export const userReadinessSummary = {
+  "generatedAt": "2026-07-01T20:00:39.811Z",
+  "source": "Local UpKeep export compared with local AD lookup",
+  "totals": {
+    "upkeepUsers": 54,
+    "matched": 37,
+    "needsAction": 17,
+    "missingUpkeepEmail": 0,
+    "missingAdUser": 8,
+    "disabledAdUser": 6,
+    "terminatedPayrollUser": 3,
+    "missingAdPayrollActive": 7,
+    "missingAdPayrollInactive": 0,
+    "missingAdPayrollNotFound": 1
+  },
+  "coverage": {
+    "expectedMinimum": 117,
+    "actual": 54,
+    "status": "below_expected",
+    "message": "UpKeep returned 54 users, below expected minimum 117. Verify API credentials have whole-environment visibility."
+  },
+  "readinessPercent": 69,
+  "chartSegments": [
+    {
+      "label": "Matched",
+      "value": 37,
+      "className": "segment-good"
+    },
+    {
+      "label": "Terminated payroll",
+      "value": 3,
+      "className": "segment-danger"
+    },
+    {
+      "label": "Missing AD user",
+      "value": 8,
+      "className": "segment-risk"
+    },
+    {
+      "label": "Disabled AD user",
+      "value": 6,
+      "className": "segment-watch"
+    },
+    {
+      "label": "Missing UpKeep email",
+      "value": 0,
+      "className": "segment-muted"
+    }
+  ],
+  "actionBuckets": [
+    {
+      "label": "Ready for SSO",
+      "count": 37,
+      "tone": "good",
+      "description": "UpKeep account has a matching enabled AD identity."
+    },
+    {
+      "label": "Disable in UpKeep",
+      "count": 3,
+      "tone": "danger",
+      "description": "Payroll status is inactive or terminated."
+    },
+    {
+      "label": "Create or migrate AD identity",
+      "count": 8,
+      "tone": "risk",
+      "description": "UpKeep account did not match a local AD user."
+    },
+    {
+      "label": "Enable or replace AD identity",
+      "count": 6,
+      "tone": "watch",
+      "description": "AD account exists but is disabled."
+    },
+    {
+      "label": "Correct UpKeep email",
+      "count": 0,
+      "tone": "muted",
+      "description": "UpKeep account is missing an email."
+    }
+  ]
+};

@@ -1,0 +1,49 @@
+{
+  "name": "upkeep-sso-upgrade",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "format": "prettier --write .",
+    "check:format": "prettier --check .",
+    "test": "node scripts/validate-plan.mjs",
+    "extract:plan": "node scripts/extract-plan.mjs",
+    "upkeep:smoke": "node scripts/upkeep-smoke.mjs",
+    "upkeep:users": "node scripts/fetch-upkeep-users.mjs",
+    "users:diff": "node scripts/diff-users.mjs",
+    "users:summary": "node scripts/summarize-user-diff.mjs",
+    "users:reconcile": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/reconcile-users.ps1",
+    "upkeep:apply-user-updates": "node scripts/apply-upkeep-user-updates.mjs",
+    "ad:probe": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/export-ad-users.ps1 -Probe",
+    "ad:users": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/export-ad-users.ps1 -AllUpKeepUsers",
+    "payroll:lookup": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/query-payroll-users.ps1",
+    "payroll:missing-ad": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/query-payroll-users.ps1 -FromMissingAdUsers",
+    "payroll:upkeep-users": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/query-payroll-users.ps1 -FromAllUpKeepUsers",
+    "upkeep:inventory": "node scripts/fetch-upkeep-inventory.mjs",
+    "upkeep:preventative-completions": "node scripts/export-upkeep-preventative-completions.mjs",
+    "upkeep:coverage": "node scripts/diagnose-upkeep-user-coverage.mjs",
+    "upkeep:propose-user-updates": "node scripts/propose-upkeep-user-updates.mjs"
+  },
+  "dependencies": {
+    "jszip": "^3.10.1",
+    "lucide-react": "^0.542.0",
+    "mssql": "^12.6.0",
+    "next": "^15.4.5",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "@types/react": "^19.1.9",
+    "@types/react-dom": "^19.1.7",
+    "eslint": "^9.33.0",
+    "eslint-config-next": "^15.4.5",
+    "playwright": "^1.61.1",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.2"
+  }
+}

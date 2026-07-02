@@ -1,0 +1,13 @@
+{
+  "accountTypeByGroup": {
+    "UpKeep Admins": "ADMIN",
+    "UpKeep Technicians": "TECH",
+    "UpKeep Requesters": "REQUESTER",
+    "UpKeep View Only": "VIEW_ONLY",
+    "UpKeep Limited Techs": "LIMITED_TECH"
+  },
+  "locationByGroup": {
+    "UpKeep Location ELK 1020": "ELK - 1020 - Brown Box/Conversion"
+  },
+  "defaultAccountType": "REQUESTER"
+}
