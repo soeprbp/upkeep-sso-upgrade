@@ -33,6 +33,14 @@ function Import-DotEnv {
 
 Import-DotEnv
 
+$trustServerCertificate = $false
+$trustServerCertificateSetting = $env:PAYROLL_SQL_TRUST_SERVER_CERTIFICATE
+if (-not [string]::IsNullOrWhiteSpace($trustServerCertificateSetting)) {
+  if (-not [bool]::TryParse($trustServerCertificateSetting, [ref]$trustServerCertificate)) {
+    throw "PAYROLL_SQL_TRUST_SERVER_CERTIFICATE must be true or false."
+  }
+}
+
 if ([string]::IsNullOrWhiteSpace($Server)) {
   $Server = $env:PAYROLL_SQL_SERVER
 }
@@ -121,7 +129,8 @@ function New-ReadOnlyConnection {
   $builder["Integrated Security"] = $true
   $builder["Application Name"] = "UpKeep SSO Payroll Read Only"
   $builder["ApplicationIntent"] = "ReadOnly"
-  $builder["TrustServerCertificate"] = $true
+  $builder["Encrypt"] = $true
+  $builder["TrustServerCertificate"] = $trustServerCertificate
   $builder["Connect Timeout"] = 15
   New-Object System.Data.SqlClient.SqlConnection $builder.ConnectionString
 }

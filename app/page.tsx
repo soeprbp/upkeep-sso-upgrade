@@ -5,7 +5,6 @@ import Link from "next/link";
 import {
   ArrowRight,
   BadgeCheck,
-  Bell,
   CalendarRange,
   ChevronRight,
   Circle,
@@ -33,13 +32,23 @@ import {
   technicalChecklist
 } from "../data/implementation-plan.js";
 import { userReadinessSummary } from "../data/user-readiness-summary.js";
+import {
+  calculateCompletionProgress,
+  calculateCoveragePercent
+} from "../lib/dashboard-metrics.mjs";
 
 const repositoryUrl = "https://github.com/soeprbp/upkeep-sso-upgrade";
+const docsUrl = `${repositoryUrl}/tree/main/docs`;
+const technicalRunbookUrl = `${repositoryUrl}/blob/main/docs/tickets/UpKeep-Entra-Setup-Ticket.md`;
+const communicationsUrl = `${repositoryUrl}/tree/main/docs/communications`;
+const notesStorageKey = "upkeep-sso-notes";
+const completedPhasesStorageKey = "upkeep-sso-completed-phases";
+const validPhaseIds = new Set(rolloutPhases.map((phase) => phase.id));
 
 type NavItem = {
   label: string;
   icon: LucideIcon;
-  action?: "overview" | "timeline" | "risks" | "docs" | "actions" | "notes";
+  action?: "overview" | "timeline" | "risks" | "actions" | "notes";
   href?: string;
   external?: boolean;
 };
@@ -49,7 +58,7 @@ const navItems: NavItem[] = [
   { label: "Timeline", icon: CalendarRange, action: "timeline" },
   { label: "Users", icon: UsersRound, href: "/users" },
   { label: "Risks", icon: ShieldAlert, action: "risks" },
-  { label: "Docs", icon: FileText, action: "docs" },
+  { label: "Docs", icon: FileText, href: docsUrl, external: true },
   { label: "GitHub", icon: Github, href: repositoryUrl, external: true },
   { label: "Actions", icon: ListChecks, action: "actions" },
   { label: "Notes", icon: NotebookText, action: "notes" }
@@ -81,6 +90,18 @@ function phaseLabel(status: string) {
   }
 }
 
+function formatDataDate(value: string | null) {
+  if (!value) {
+    return "Not run yet";
+  }
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric"
+  }).format(new Date(value));
+}
+
 export default function Page() {
   const notesRef = useRef<HTMLTextAreaElement | null>(null);
   const [selectedPhaseId, setSelectedPhaseId] = useState(rolloutPhases[2].id);
@@ -96,39 +117,65 @@ export default function Page() {
     rolloutPhases.findIndex((phase) => phase.id === selectedPhaseId)
   );
   const selectedPhase = useMemo(
-    () => rolloutPhases.find((phase) => phase.id === selectedPhaseId) ?? rolloutPhases[0],
+    () =>
+      rolloutPhases.find((phase) => phase.id === selectedPhaseId) ??
+      rolloutPhases[0],
     [selectedPhaseId]
   );
   const selectedPhaseStatus = completedPhaseIds.includes(selectedPhase.id)
     ? "done"
     : selectedPhase.status;
-  const overallProgress = Math.round(((selectedIndex + 1) / rolloutPhases.length) * 100);
-  const expectedUpKeepUsers = userReadinessSummary.coverage?.expectedMinimum ?? 0;
+  const isSelectedPhaseComplete = completedPhaseIds.includes(selectedPhase.id);
+  const overallProgress = calculateCompletionProgress(
+    completedPhaseIds.length,
+    rolloutPhases.length
+  );
+  const expectedUpKeepUsers =
+    userReadinessSummary.coverage?.expectedMinimum ?? 0;
   const exportedUpKeepUsers =
-    userReadinessSummary.coverage?.actual ?? userReadinessSummary.totals.upkeepUsers;
-  const coveragePercent =
-    expectedUpKeepUsers > 0
-      ? Math.min(100, Math.round((exportedUpKeepUsers / expectedUpKeepUsers) * 100))
-      : 100;
-  const hasPartialApiCoverage = userReadinessSummary.coverage?.status === "below_expected";
+    userReadinessSummary.coverage?.actual ??
+    userReadinessSummary.totals.upkeepUsers;
+  const coveragePercent = calculateCoveragePercent(
+    exportedUpKeepUsers,
+    expectedUpKeepUsers
+  );
+  const hasPartialApiCoverage =
+    userReadinessSummary.coverage?.status === "below_expected";
+  const dataRefreshedAt = formatDataDate(userReadinessSummary.generatedAt);
 
   useEffect(() => {
     try {
-      const raw = window.localStorage.getItem("upkeep-sso-notes");
-      if (!raw) {
-        return;
+      const rawNotes = window.localStorage.getItem(notesStorageKey);
+      if (rawNotes) {
+        const parsedNotes = JSON.parse(rawNotes) as Array<{
+          id: string;
+          createdAt: string;
+          phase: string;
+          text: string;
+        }>;
+        if (Array.isArray(parsedNotes)) {
+          setSavedNotes(parsedNotes);
+        }
       }
-      const parsed = JSON.parse(raw) as Array<{
-        id: string;
-        createdAt: string;
-        phase: string;
-        text: string;
-      }>;
-      if (Array.isArray(parsed)) {
-        setSavedNotes(parsed);
+
+      const rawCompletedPhases = window.localStorage.getItem(
+        completedPhasesStorageKey
+      );
+      if (rawCompletedPhases) {
+        const parsedCompletedPhases = JSON.parse(rawCompletedPhases) as unknown;
+        if (Array.isArray(parsedCompletedPhases)) {
+          setCompletedPhaseIds([
+            ...new Set(
+              parsedCompletedPhases.filter(
+                (phaseId): phaseId is string =>
+                  typeof phaseId === "string" && validPhaseIds.has(phaseId)
+              )
+            )
+          ]);
+        }
       }
     } catch {
-      // Ignore malformed local note state.
+      // Ignore malformed local dashboard state.
     }
   }, []);
 
@@ -138,9 +185,32 @@ export default function Page() {
     }
   }, [notesOpen]);
 
-  function persistNotes(nextNotes: Array<{ id: string; createdAt: string; phase: string; text: string }>) {
+  function persistNotes(
+    nextNotes: Array<{
+      id: string;
+      createdAt: string;
+      phase: string;
+      text: string;
+    }>
+  ) {
     setSavedNotes(nextNotes);
-    window.localStorage.setItem("upkeep-sso-notes", JSON.stringify(nextNotes));
+    try {
+      window.localStorage.setItem(notesStorageKey, JSON.stringify(nextNotes));
+    } catch {
+      // Notes still remain available for the current browser session.
+    }
+  }
+
+  function persistCompletedPhases(nextPhaseIds: string[]) {
+    setCompletedPhaseIds(nextPhaseIds);
+    try {
+      window.localStorage.setItem(
+        completedPhasesStorageKey,
+        JSON.stringify(nextPhaseIds)
+      );
+    } catch {
+      // Completion state still remains available for the current browser session.
+    }
   }
 
   function scrollToSection(sectionId: string) {
@@ -159,9 +229,11 @@ export default function Page() {
   }
 
   function completeSelectedPhase() {
-    setCompletedPhaseIds((current) =>
-      current.includes(selectedPhase.id) ? current : [...current, selectedPhase.id]
-    );
+    if (isSelectedPhaseComplete) {
+      return;
+    }
+
+    persistCompletedPhases([...completedPhaseIds, selectedPhase.id]);
 
     const nextPhase = rolloutPhases[selectedIndex + 1];
     if (nextPhase) {
@@ -185,7 +257,9 @@ export default function Page() {
       userReadinessSummary
     };
 
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {
+      type: "application/json"
+    });
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
@@ -216,7 +290,9 @@ export default function Page() {
 
   return (
     <main className="workspace" id="overview">
-      <aside className={`sidebar ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
+      <aside
+        className={`sidebar ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}
+      >
         <div className="brand">
           <div className="brand-mark">
             <span>U</span>
@@ -249,6 +325,14 @@ export default function Page() {
             <span>{sourceSummary.users}</span>
             <span>{sourceSummary.corporateCoverage}</span>
           </div>
+        </div>
+
+        <div className="sidebar-card">
+          <span className="sidebar-label">Published data</span>
+          <p className="sidebar-copy">
+            Public, sanitized project totals only. Credentials and user-level
+            exports remain local and are not published.
+          </p>
         </div>
 
         <nav className="nav">
@@ -294,8 +378,6 @@ export default function Page() {
                     scrollToSection("timeline");
                   } else if (item.action === "risks") {
                     scrollToSection("risks");
-                  } else if (item.action === "docs") {
-                    scrollToSection("communications");
                   } else if (item.action === "actions") {
                     scrollToSection("actions");
                   } else if (item.action === "notes") {
@@ -316,7 +398,7 @@ export default function Page() {
             onClick={() => scrollToSection("tech")}
           >
             <Settings size={16} />
-            Project Settings
+            Technical checklist
           </button>
 
           <div className="user-card">
@@ -344,7 +426,7 @@ export default function Page() {
             <div className="topbar-copy">
               <p className="eyebrow">Implementation workspace</p>
               <h2>UpKeep SSO Upgrade</h2>
-              <div className="status-row">
+              <div className="topbar-status-row">
                 <span className="status-chip status-chip-active">
                   <BadgeCheck size={14} />
                   {phaseLabel(selectedPhaseStatus)}
@@ -364,15 +446,15 @@ export default function Page() {
           <div className="topbar-meta">
             <span className="meta-item">
               <CalendarRange size={16} />
-              May 12, 2025
+              Data refreshed {dataRefreshedAt}
             </span>
             <span className="meta-item">
               <UsersRound size={16} />
-              6
+              Expected scope: {expectedUpKeepUsers || "Not set"}
             </span>
             <span className="meta-item">
-              <Bell size={16} />
-              <span className="badge-dot">3</span>
+              <TrendingUp size={16} />
+              API scope: {hasPartialApiCoverage ? "Partial" : "Complete"}
             </span>
           </div>
         </header>
@@ -400,7 +482,11 @@ export default function Page() {
                   onClick={() => setSelectedPhaseId(phase.id)}
                 >
                   <span className="rail-node">
-                    {isComplete ? <BadgeCheck size={14} /> : <Circle size={14} />}
+                    {isComplete ? (
+                      <BadgeCheck size={14} />
+                    ) : (
+                      <Circle size={14} />
+                    )}
                   </span>
                   <span className="rail-title">{phase.title}</span>
                   <span className="rail-window">{phase.window}</span>
@@ -415,7 +501,9 @@ export default function Page() {
             <div className="panel-head">
               <div>
                 <p className="section-label">Phase detail</p>
-                <h3>Phase {selectedIndex + 1}: {selectedPhase.title}</h3>
+                <h3>
+                  Phase {selectedIndex + 1}: {selectedPhase.title}
+                </h3>
               </div>
               <span className={`status-pill ${phaseTone(selectedPhaseStatus)}`}>
                 {phaseLabel(selectedPhaseStatus)}
@@ -497,20 +585,28 @@ export default function Page() {
 
             <div className="readiness-grid">
               <div className="metric-card">
-                <span className="metric-value">{userReadinessSummary.totals.upkeepUsers || "~110"}</span>
+                <span className="metric-value">
+                  {userReadinessSummary.totals.upkeepUsers || "~110"}
+                </span>
                 <span className="metric-label">UpKeep users</span>
               </div>
               <div className="metric-card">
-                <span className="metric-value">{userReadinessSummary.readinessPercent}%</span>
-                <span className="metric-label">AD match readiness</span>
+                <span className="metric-value">
+                  {userReadinessSummary.readinessPercent}%
+                </span>
+                <span className="metric-label">visible export matched</span>
               </div>
               <div className="metric-card">
-                <span className="metric-value">{userReadinessSummary.totals.matched}</span>
+                <span className="metric-value">
+                  {userReadinessSummary.totals.matched}
+                </span>
                 <span className="metric-label">Matched AD users</span>
               </div>
               <div className="metric-card">
-                <span className="metric-value">{userReadinessSummary.totals.needsAction}</span>
-                <span className="metric-label">Need action</span>
+                <span className="metric-value">
+                  {userReadinessSummary.totals.needsAction}
+                </span>
+                <span className="metric-label">need action in export</span>
               </div>
             </div>
 
@@ -526,7 +622,9 @@ export default function Page() {
                 <p className="section-label">API coverage</p>
                 <h3>UpKeep user export scope</h3>
               </div>
-              <span className={`status-pill ${hasPartialApiCoverage ? "tone-watch" : "tone-done"}`}>
+              <span
+                className={`status-pill ${hasPartialApiCoverage ? "tone-watch" : "tone-done"}`}
+              >
                 {hasPartialApiCoverage ? "Partial" : "Complete"}
               </span>
             </div>
@@ -535,21 +633,32 @@ export default function Page() {
               <div className="coverage-meter-head">
                 <div>
                   <span className="metric-value">{exportedUpKeepUsers}</span>
-                  <span className="metric-label">users visible through API</span>
+                  <span className="metric-label">
+                    users visible through API
+                  </span>
                 </div>
                 <div>
-                  <span className="metric-value">{expectedUpKeepUsers || "~117"}</span>
+                  <span className="metric-value">
+                    {expectedUpKeepUsers || "~117"}
+                  </span>
                   <span className="metric-label">expected full scope</span>
                 </div>
               </div>
-              <div className="progress-track" aria-label={`${coveragePercent}% API coverage`}>
-                <span className="progress-fill coverage-fill" style={{ width: `${coveragePercent}%` }} />
+              <div
+                className="progress-track"
+                aria-label={`${coveragePercent}% API coverage`}
+              >
+                <span
+                  className="progress-fill coverage-fill"
+                  style={{ width: `${coveragePercent}%` }}
+                />
               </div>
               <div className="coverage-note">
                 <TrendingUp size={16} />
                 <span>
-                  Access update pending. Re-run the UpKeep export when the account scope changes;
-                  this panel should move toward the full user population.
+                  Access update pending. Re-run the UpKeep export when the
+                  account scope changes; this panel should move toward the full
+                  user population.
                 </span>
               </div>
             </div>
@@ -573,7 +682,12 @@ export default function Page() {
                 </div>
               ))}
             </div>
-            <a className="footer-link" href="#communications">
+            <a
+              className="footer-link"
+              href={technicalRunbookUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
               View technical runbook <ArrowRight size={14} />
             </a>
           </article>
@@ -593,7 +707,9 @@ export default function Page() {
                     <span className="status-icon">
                       <BadgeCheck size={14} />
                     </span>
-                    <span>{item.label} - {item.detail}</span>
+                    <span>
+                      {item.label} - {item.detail}
+                    </span>
                     <span className="status-value">Planned</span>
                   </div>
                 ))}
@@ -607,7 +723,9 @@ export default function Page() {
                     <span className="status-icon">
                       <BadgeCheck size={14} />
                     </span>
-                    <span>{item.label} - {item.detail}</span>
+                    <span>
+                      {item.label} - {item.detail}
+                    </span>
                     <span className="status-value">Planned</span>
                   </div>
                 ))}
@@ -648,8 +766,13 @@ export default function Page() {
                 </article>
               ))}
             </div>
-            <a className="footer-link" href="#risks">
-              View all messages <ArrowRight size={14} />
+            <a
+              className="footer-link"
+              href={communicationsUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Open communication documents <ArrowRight size={14} />
             </a>
           </article>
 
@@ -659,8 +782,8 @@ export default function Page() {
                 <p className="section-label">Risks</p>
                 <h3>Risks</h3>
               </div>
-              <a className="footer-link" href="#overview">
-                View all risks <ArrowRight size={14} />
+              <a className="footer-link" href="#timeline">
+                Back to timeline <ArrowRight size={14} />
               </a>
             </div>
 
@@ -701,23 +824,28 @@ export default function Page() {
               </div>
               <div className="repo-stats">
                 <div>
-                  <strong>42</strong>
-                  <span>Commits</span>
+                  <strong>Public</strong>
+                  <span>Visibility</span>
                 </div>
                 <div>
                   <strong>main</strong>
                   <span>Default Branch</span>
                 </div>
                 <div>
-                  <strong>3</strong>
-                  <span>Open PRs</span>
+                  <strong>Pages</strong>
+                  <span>Hosting</span>
                 </div>
                 <div>
-                  <strong>All Checks</strong>
-                  <span>Passing</span>
+                  <strong>Actions</strong>
+                  <span>Deployment</span>
                 </div>
               </div>
-              <a className="footer-link" href={repositoryUrl} target="_blank" rel="noreferrer">
+              <a
+                className="footer-link"
+                href={repositoryUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
                 Open in GitHub <ArrowRight size={14} />
               </a>
             </div>
@@ -726,9 +854,14 @@ export default function Page() {
 
         <footer className="action-bar">
           <div className="action-group">
-            <button className="action primary" type="button" onClick={completeSelectedPhase}>
+            <button
+              className="action primary"
+              type="button"
+              onClick={completeSelectedPhase}
+              disabled={isSelectedPhaseComplete}
+            >
               <BadgeCheck size={16} />
-              Mark Complete
+              {isSelectedPhaseComplete ? "Completed" : "Mark Complete"}
             </button>
             <button
               className="action"
@@ -744,7 +877,11 @@ export default function Page() {
             </button>
           </div>
 
-          <button className="action" type="button" onClick={() => window.print()}>
+          <button
+            className="action"
+            type="button"
+            onClick={() => window.print()}
+          >
             <Printer size={16} />
             Print
           </button>
@@ -757,7 +894,11 @@ export default function Page() {
                 <p className="section-label">Notes</p>
                 <h3>Capture a rollout note</h3>
               </div>
-              <button className="action" type="button" onClick={() => setNotesOpen(false)}>
+              <button
+                className="action"
+                type="button"
+                onClick={() => setNotesOpen(false)}
+              >
                 Close
               </button>
             </div>
@@ -774,7 +915,11 @@ export default function Page() {
               </label>
 
               <div className="notes-actions">
-                <button className="action primary" type="button" onClick={saveNote}>
+                <button
+                  className="action primary"
+                  type="button"
+                  onClick={saveNote}
+                >
                   <BadgeCheck size={16} />
                   Save Note
                 </button>
@@ -785,7 +930,11 @@ export default function Page() {
                 >
                   Fill phase summary
                 </button>
-                <button className="action" type="button" onClick={() => scrollToSection("communications")}>
+                <button
+                  className="action"
+                  type="button"
+                  onClick={() => scrollToSection("communications")}
+                >
                   Jump to communications
                 </button>
               </div>
@@ -802,12 +951,14 @@ export default function Page() {
                   <article key={note.id} className="saved-note">
                     <div className="saved-note-head">
                       <strong>{note.phase}</strong>
-                      <span>{new Intl.DateTimeFormat("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        hour: "numeric",
-                        minute: "2-digit"
-                      }).format(new Date(note.createdAt))}</span>
+                      <span>
+                        {new Intl.DateTimeFormat("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          hour: "numeric",
+                          minute: "2-digit"
+                        }).format(new Date(note.createdAt))}
+                      </span>
                     </div>
                     <p>{note.text}</p>
                   </article>

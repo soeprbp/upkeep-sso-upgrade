@@ -10,7 +10,8 @@
     "lint": "next lint",
     "format": "prettier --write .",
     "check:format": "prettier --check .",
-    "test": "node scripts/validate-plan.mjs",
+    "test": "node scripts/validate-plan.mjs && node --test tests/*.test.mjs",
+    "test:e2e": "playwright test",
     "extract:plan": "node scripts/extract-plan.mjs",
     "upkeep:smoke": "node scripts/upkeep-smoke.mjs",
     "upkeep:users": "node scripts/fetch-upkeep-users.mjs",
@@ -32,7 +33,7 @@
     "jszip": "^3.10.1",
     "lucide-react": "^0.542.0",
     "mssql": "^12.6.0",
-    "next": "^15.4.5",
+    "next": "^15.5.20",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },
@@ -41,9 +42,12 @@
     "@types/react": "^19.1.9",
     "@types/react-dom": "^19.1.7",
     "eslint": "^9.33.0",
-    "eslint-config-next": "^15.4.5",
+    "eslint-config-next": "^15.5.20",
     "playwright": "^1.61.1",
     "prettier": "^3.6.2",
     "typescript": "^5.9.2"
+  },
+  "overrides": {
+    "postcss": "^8.5.10"
   }
 }

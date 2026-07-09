@@ -113,6 +113,8 @@ npm run users:diff -- --entra-csv C:\path\to\entra-users.csv
 
 For cloud Entra Graph comparison, omit `--entra-csv` and configure `AZURE_TENANT_ID`, `AZURE_CLIENT_ID`, and `AZURE_CLIENT_SECRET` in `.env.local`.
 
+Payroll SQL connections require encryption and validate the server certificate by default. Set `PAYROLL_SQL_TRUST_SERVER_CERTIFICATE=true` only when the internal SQL certificate has been independently verified and cannot be validated through the normal trust chain.
+
 If UpKeep exposes the user list at a tenant-specific path, set `UPKEEP_USERS_ENDPOINT` in `.env.local` or pass it to the fetch script:
 
 ```bash
@@ -129,14 +131,11 @@ Use `config/upkeep-group-mapping.example.json` as the starting point for AD grou
 npm run upkeep:propose-user-updates
 ```
 
-## Simple page auth
+Location mappings are emitted as `suggestedLocationName` review values. They are not silently sent to UpKeep because the update API needs a separately verified location field or ID. The apply command refuses to run until those suggestions are resolved and removed from the update file.
 
-The static pages use a lightweight client-side gate for casual access control. Defaults are:
+## Published data boundary
 
-- Username: `bsoper`
-- Password: configured by `NEXT_PUBLIC_BASIC_AUTH_PASSWORD_SHA256`
-
-Before publishing broadly, replace `NEXT_PUBLIC_BASIC_AUTH_PASSWORD_SHA256` in the build environment with a SHA-256 hash of the desired password. This is not a replacement for real server-side authentication, but it keeps the dashboard from being casually browsed.
+GitHub Pages and this repository are public. The dashboard therefore publishes only sanitized totals and project-planning content. Credentials and user-level exports must remain in `.env.local` and `data/generated/`, which are git-ignored. Use hosting with server-side identity enforcement if the dashboard ever needs to contain private information.
 
 ## GitHub Pages
 

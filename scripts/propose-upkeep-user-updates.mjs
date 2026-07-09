@@ -10,7 +10,7 @@ const columns = [
   { key: "lastName" },
   { key: "jobTitle" },
   { key: "accountType" },
-  { key: "locationName" },
+  { key: "suggestedLocationName" },
   { key: "notes" }
 ];
 
@@ -59,7 +59,9 @@ function deriveNames(row) {
 }
 
 async function main() {
-  const diffPath = path.resolve(argValue("--diff") ?? "data/generated/user-diff.json");
+  const diffPath = path.resolve(
+    argValue("--diff") ?? "data/generated/user-diff.json"
+  );
   const mappingPath = path.resolve(
     argValue("--mapping") ?? "config/upkeep-group-mapping.example.json"
   );
@@ -87,11 +89,17 @@ async function main() {
         row.upkeepRole ||
         mapping.defaultAccountType ||
         "";
-      const locationName = findMappedValue(groups, mapping.locationByGroup ?? {});
+      const suggestedLocationName = findMappedValue(
+        groups,
+        mapping.locationByGroup ?? {}
+      );
       const jobTitle = firstNonEmpty(row.entraJobTitle, row.payrollJobTitle);
 
       const notes = [];
-      if (row.status === "missing_entra_user" && row.payrollMatchStatus === "active") {
+      if (
+        row.status === "missing_entra_user" &&
+        row.payrollMatchStatus === "active"
+      ) {
         notes.push("Active payroll match needs AD/Entra account before SSO");
       }
       if (groups.length === 0 && row.status === "matched") {
@@ -106,7 +114,7 @@ async function main() {
         lastName,
         jobTitle,
         accountType,
-        locationName,
+        suggestedLocationName,
         notes: notes.join("; ")
       };
     })

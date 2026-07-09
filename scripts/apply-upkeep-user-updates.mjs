@@ -1,4 +1,5 @@
 import fs from "node:fs/promises";
+import { pathToFileURL } from "node:url";
 import { parseCsv } from "../lib/csv.mjs";
 import { UpKeepClient } from "../lib/upkeep-client.mjs";
 
@@ -11,6 +12,8 @@ const allowedFields = [
   "phoneNumber",
   "isLocationBased"
 ];
+const identifierFields = ["upkeepId", "id", "userId"];
+const reviewOnlyFields = ["sourceStatus", "suggestedLocationName", "notes"];
 
 function argValue(name) {
   const index = process.argv.indexOf(name);
@@ -27,6 +30,39 @@ function pickPatchFields(row) {
   return fields;
 }
 
+export function buildUpdatePlan(rows) {
+  const knownFields = new Set([
+    ...identifierFields,
+    ...allowedFields,
+    ...reviewOnlyFields
+  ]);
+  const unsupportedFields = [
+    ...new Set(
+      rows.flatMap((row) =>
+        Object.entries(row)
+          .filter(
+            ([field, value]) =>
+              !knownFields.has(field) && String(value).trim() !== ""
+          )
+          .map(([field]) => field)
+      )
+    )
+  ];
+  const locationReviewCount = rows.filter(
+    (row) => String(row.suggestedLocationName ?? "").trim() !== ""
+  ).length;
+  const updates = rows
+    .map((row) => ({
+      upkeepId: row.upkeepId ?? row.id ?? row.userId,
+      fields: pickPatchFields(row)
+    }))
+    .filter(
+      (update) => update.upkeepId && Object.keys(update.fields).length > 0
+    );
+
+  return { locationReviewCount, unsupportedFields, updates };
+}
+
 async function main() {
   const filePath = argValue("--file");
   const apply = process.argv.includes("--apply");
@@ -38,12 +74,13 @@ async function main() {
   }
 
   const rows = parseCsv(await fs.readFile(filePath, "utf8"));
-  const updates = rows
-    .map((row) => ({
-      upkeepId: row.upkeepId ?? row.id ?? row.userId,
-      fields: pickPatchFields(row)
-    }))
-    .filter((update) => update.upkeepId && Object.keys(update.fields).length > 0);
+  const { locationReviewCount, unsupportedFields, updates } =
+    buildUpdatePlan(rows);
+  if (unsupportedFields.length > 0) {
+    throw new Error(
+      `Unsupported non-empty update columns: ${unsupportedFields.join(", ")}`
+    );
+  }
 
   if (!apply) {
     console.log(
@@ -51,7 +88,11 @@ async function main() {
         {
           mode: "dry-run",
           updateCount: updates.length,
-          message: "Re-run with --apply to PATCH these users in UpKeep.",
+          locationReviewCount,
+          message:
+            locationReviewCount > 0
+              ? "Resolve suggestedLocationName values before applying; location updates require a separately verified UpKeep field or ID."
+              : "Re-run with --apply to PATCH these users in UpKeep.",
           updates
         },
         null,
@@ -59,6 +100,12 @@ async function main() {
       )
     );
     return;
+  }
+
+  if (locationReviewCount > 0) {
+    throw new Error(
+      `Refusing to apply while ${locationReviewCount} suggestedLocationName value(s) remain unresolved.`
+    );
   }
 
   const client = UpKeepClient.fromEnv();
@@ -72,10 +119,21 @@ async function main() {
     });
   }
 
-  console.log(JSON.stringify({ mode: "apply", updateCount: results.length, results }, null, 2));
+  console.log(
+    JSON.stringify(
+      { mode: "apply", updateCount: results.length, results },
+      null,
+      2
+    )
+  );
 }
 
-main().catch((error) => {
-  console.error(error instanceof Error ? error.message : error);
-  process.exit(1);
-});
+if (
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(process.argv[1]).href
+) {
+  main().catch((error) => {
+    console.error(error instanceof Error ? error.message : error);
+    process.exit(1);
+  });
+}
