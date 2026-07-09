@@ -722,6 +722,43 @@ button {
   gap: 12px;
 }
 
+.coverage-card {
+  margin-top: 12px;
+  display: grid;
+  gap: 14px;
+}
+
+.coverage-meter-head {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.coverage-meter-head > div,
+.coverage-note {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-muted);
+  padding: 14px 12px;
+}
+
+.coverage-fill {
+  background: linear-gradient(90deg, var(--amber) 0%, #f3b342 100%);
+}
+
+.coverage-note {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  gap: 10px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.coverage-note svg {
+  color: var(--amber);
+  margin-top: 2px;
+}
+
 .status-list {
   margin-top: 12px;
   display: grid;
@@ -1378,6 +1415,7 @@ button {
   .users-grid,
   .detail-meta,
   .readiness-grid,
+  .coverage-meter-head,
   .legend-grid,
   .repo-stats,
   .risk-head,

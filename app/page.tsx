@@ -20,6 +20,7 @@ import {
   Settings,
   ShieldAlert,
   Sparkles,
+  TrendingUp,
   type LucideIcon,
   UsersRound
 } from "lucide-react";
@@ -102,6 +103,14 @@ export default function Page() {
     ? "done"
     : selectedPhase.status;
   const overallProgress = Math.round(((selectedIndex + 1) / rolloutPhases.length) * 100);
+  const expectedUpKeepUsers = userReadinessSummary.coverage?.expectedMinimum ?? 0;
+  const exportedUpKeepUsers =
+    userReadinessSummary.coverage?.actual ?? userReadinessSummary.totals.upkeepUsers;
+  const coveragePercent =
+    expectedUpKeepUsers > 0
+      ? Math.min(100, Math.round((exportedUpKeepUsers / expectedUpKeepUsers) * 100))
+      : 100;
+  const hasPartialApiCoverage = userReadinessSummary.coverage?.status === "below_expected";
 
   useEffect(() => {
     try {
@@ -508,6 +517,41 @@ export default function Page() {
             <div className="readiness-footer">
               <strong>{userReadinessSummary.source}</strong>
               <Link href="/users">View users page</Link>
+            </div>
+          </article>
+
+          <article className="panel">
+            <div className="panel-head">
+              <div>
+                <p className="section-label">API coverage</p>
+                <h3>UpKeep user export scope</h3>
+              </div>
+              <span className={`status-pill ${hasPartialApiCoverage ? "tone-watch" : "tone-done"}`}>
+                {hasPartialApiCoverage ? "Partial" : "Complete"}
+              </span>
+            </div>
+
+            <div className="coverage-card">
+              <div className="coverage-meter-head">
+                <div>
+                  <span className="metric-value">{exportedUpKeepUsers}</span>
+                  <span className="metric-label">users visible through API</span>
+                </div>
+                <div>
+                  <span className="metric-value">{expectedUpKeepUsers || "~117"}</span>
+                  <span className="metric-label">expected full scope</span>
+                </div>
+              </div>
+              <div className="progress-track" aria-label={`${coveragePercent}% API coverage`}>
+                <span className="progress-fill coverage-fill" style={{ width: `${coveragePercent}%` }} />
+              </div>
+              <div className="coverage-note">
+                <TrendingUp size={16} />
+                <span>
+                  Access update pending. Re-run the UpKeep export when the account scope changes;
+                  this panel should move toward the full user population.
+                </span>
+              </div>
             </div>
           </article>
 
