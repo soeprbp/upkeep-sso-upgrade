@@ -18,6 +18,11 @@ assert(rolloutPhases.length === 7, "expected seven rollout phases");
 assert(readinessMetrics.length === 4, "expected four readiness metrics");
 assert(technicalChecklist.length >= 6, "expected a technical checklist");
 assert(communicationPlan.length === 4, "expected four communication milestones");
+assert(communicationPlan[0].status === "sent", "first stakeholder email should be sent");
+assert(
+  communicationPlan[0].detail.includes("C-suite and managers"),
+  "first stakeholder email should identify its audience"
+);
 assert(risks.some((risk) => risk.severity === "high"), "expected high-severity risks");
 
 console.log("Rollout plan validation passed.");

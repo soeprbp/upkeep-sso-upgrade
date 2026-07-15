@@ -29,5 +29,9 @@ export const sourceSummary: {
 export const rolloutPhases: Phase[];
 export const readinessMetrics: Array<{ label: string; value: string }>;
 export const technicalChecklist: string[];
-export const communicationPlan: Array<{ label: string; detail: string }>;
+export const communicationPlan: Array<{
+  label: string;
+  detail: string;
+  status: "sent" | "planned";
+}>;
 export const risks: Risk[];

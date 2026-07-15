@@ -179,20 +179,24 @@ export const technicalChecklist = [
 
 export const communicationPlan = [
   {
-    label: "Day 2",
-    detail: "Send the first announcement to all UpKeep users."
+    label: "July 15, 2026",
+    detail: "Initial project email sent to the C-suite and managers.",
+    status: "sent"
   },
   {
     label: "Day 4",
-    detail: "Brief the pilot group with step-by-step login guidance."
+    detail: "Brief the pilot group with step-by-step login guidance.",
+    status: "planned"
   },
   {
     label: "Week 2",
-    detail: "Send wave-specific reminders before each user group goes live."
+    detail: "Send wave-specific reminders before each user group goes live.",
+    status: "planned"
   },
   {
     label: "Final day",
-    detail: "Announce SSO-only access after the cutover completes."
+    detail: "Announce SSO-only access after the cutover completes.",
+    status: "planned"
   }
 ];
 

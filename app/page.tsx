@@ -710,7 +710,9 @@ export default function Page() {
                     <span>
                       {item.label} - {item.detail}
                     </span>
-                    <span className="status-value">Planned</span>
+                    <span className="status-value">
+                      {item.status === "sent" ? "Sent" : "Planned"}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -726,7 +728,9 @@ export default function Page() {
                     <span>
                       {item.label} - {item.detail}
                     </span>
-                    <span className="status-value">Planned</span>
+                    <span className="status-value">
+                      {item.status === "sent" ? "Sent" : "Planned"}
+                    </span>
                   </div>
                 ))}
               </div>
