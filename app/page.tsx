@@ -142,6 +142,11 @@ export default function Page() {
   const hasPartialApiCoverage =
     userReadinessSummary.coverage?.status === "below_expected";
   const dataRefreshedAt = formatDataDate(userReadinessSummary.generatedAt);
+  const siteEntries = Object.entries(userReadinessSummary.perSite ?? {});
+  const fetchedSiteCount = siteEntries.filter(
+    ([, site]) => site.status === "active"
+  ).length;
+  const totalSiteCount = siteEntries.length || 19;
 
   useEffect(() => {
     try {
@@ -612,7 +617,12 @@ export default function Page() {
 
             <div className="readiness-footer">
               <strong>{userReadinessSummary.source}</strong>
-              <Link href="/users">View users page</Link>
+              <div className="readiness-footer-links">
+                <span className="meta-item">
+                  {fetchedSiteCount} of {totalSiteCount} sites fetched
+                </span>
+                <Link href="/users">View users page</Link>
+              </div>
             </div>
           </article>
 

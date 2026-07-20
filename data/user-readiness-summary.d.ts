@@ -19,6 +19,12 @@ export type UserReadinessSummary = {
     status: string;
     message: string;
   };
+  perSite?: Record<string, {
+    users: number;
+    matched: number;
+    needsAction: number;
+    status: string;
+  }>;
   readinessPercent: number;
   chartSegments: Array<{
     label: string;

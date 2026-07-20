@@ -4,6 +4,7 @@ import {
   BadgeCheck,
   CalendarClock,
   CircleAlert,
+  Globe,
   RefreshCw,
   UsersRound
 } from "lucide-react";
@@ -196,6 +197,41 @@ export default function UsersPage() {
             UpKeep currently has {inventory.locations.total} locations available
             for group-driven mapping.
           </p>
+        </article>
+
+        <article className="panel panel-lg">
+          <div className="panel-head">
+            <div>
+              <p className="section-label">Site breakdown</p>
+              <h3>Per-site user counts</h3>
+            </div>
+            <Globe size={16} />
+          </div>
+          <p className="panel-copy">
+            Each UpKeep site is a separate account. Sites with 0 users have not
+            yet been fetched — run <code>npm run users:reconcile</code> to
+            populate all sites.
+          </p>
+          <div className="site-table">
+            <div className="site-table-head">
+              <span>Site</span>
+              <span>Users</span>
+              <span>Matched</span>
+              <span>Needs action</span>
+              <span>Status</span>
+            </div>
+            {Object.entries(summary.perSite ?? {}).map(([name, site]) => (
+              <div key={name} className="site-table-row">
+                <span className="site-name">{name}</span>
+                <span>{site.users}</span>
+                <span>{site.matched}</span>
+                <span>{site.needsAction}</span>
+                <span className={`site-status site-status-${site.status}`}>
+                  {site.status === "active" ? "Fetched" : site.status === "pending" ? "Pending" : site.status}
+                </span>
+              </div>
+            ))}
+          </div>
         </article>
 
         <article className="panel panel-lg">

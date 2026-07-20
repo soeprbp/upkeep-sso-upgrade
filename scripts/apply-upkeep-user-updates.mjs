@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 import { parseCsv } from "../lib/csv.mjs";
-import { UpKeepClient } from "../lib/upkeep-client.mjs";
+import { UpKeepClient, createSiteClients } from "../lib/upkeep-client.mjs";
 
 const allowedFields = [
   "email",
@@ -12,7 +12,7 @@ const allowedFields = [
   "phoneNumber",
   "isLocationBased"
 ];
-const identifierFields = ["upkeepId", "id", "userId"];
+const identifierFields = ["upkeepId", "id", "userId", "site"];
 const reviewOnlyFields = ["sourceStatus", "suggestedLocationName", "notes"];
 
 function argValue(name) {
@@ -54,6 +54,7 @@ export function buildUpdatePlan(rows) {
   const updates = rows
     .map((row) => ({
       upkeepId: row.upkeepId ?? row.id ?? row.userId,
+      site: row.site ?? "",
       fields: pickPatchFields(row)
     }))
     .filter(
@@ -83,11 +84,18 @@ async function main() {
   }
 
   if (!apply) {
+    const siteCounts = {};
+    for (const update of updates) {
+      const site = update.site || "(unknown)";
+      siteCounts[site] = (siteCounts[site] ?? 0) + 1;
+    }
+
     console.log(
       JSON.stringify(
         {
           mode: "dry-run",
           updateCount: updates.length,
+          perSite: siteCounts,
           locationReviewCount,
           message:
             locationReviewCount > 0
@@ -108,20 +116,44 @@ async function main() {
     );
   }
 
-  const client = UpKeepClient.fromEnv();
+  const siteClients = await createSiteClients();
+  const siteNames = [...siteClients.keys()];
   const results = [];
+  const siteCounts = {};
+
   for (const update of updates) {
+    const siteName = update.site;
+    const client = siteName
+      ? siteClients.get(siteName)
+      : siteNames.length === 1
+        ? siteClients.values().next().value
+        : null;
+
+    if (!client) {
+      results.push({
+        upkeepId: update.upkeepId,
+        site: siteName,
+        success: false,
+        error: siteName
+          ? `No authenticated client for site "${siteName}". Available: ${siteNames.join(", ")}`
+          : `No site specified and multiple sites configured. Available: ${siteNames.join(", ")}`
+      });
+      continue;
+    }
+
     const response = await client.patchUser(update.upkeepId, update.fields);
     results.push({
       upkeepId: update.upkeepId,
+      site: siteName,
       success: response.success !== false,
       result: response.result ?? null
     });
+    siteCounts[siteName] = (siteCounts[siteName] ?? 0) + 1;
   }
 
   console.log(
     JSON.stringify(
-      { mode: "apply", updateCount: results.length, results },
+      { mode: "apply", updateCount: results.length, perSite: siteCounts, results },
       null,
       2
     )

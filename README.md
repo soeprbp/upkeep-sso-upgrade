@@ -8,6 +8,18 @@ This repository is the working area for Welch Packaging's UpKeep authentication 
 - Structured implementation-plan data extracted from the source Word document
 - A small extractor script for turning `.docx` content into JSON
 - GitHub Pages deployment scaffolding
+- Working rollout documents under `docs/`
+- Generated charter-pack deliverables under `deliverables/`
+
+## Documentation
+
+The main working documents for the rollout live in [`docs/`](docs/README.md):
+
+- Charter
+- SolarWinds ticket brief
+- Communications drafts
+
+The generated DOCX charter pack is in [`deliverables/UpKeep_SSO_Charter_Pack.docx`](deliverables/UpKeep_SSO_Charter_Pack.docx).
 
 ## Getting started
 

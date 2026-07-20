@@ -3,6 +3,7 @@ import path from "node:path";
 import { toCsv } from "../lib/csv.mjs";
 
 const columns = [
+  { key: "site" },
   { key: "upkeepId" },
   { key: "sourceStatus" },
   { key: "email" },
@@ -107,6 +108,7 @@ async function main() {
       }
 
       return {
+        site: row.site ?? "",
         upkeepId: row.upkeepId,
         sourceStatus: row.status,
         email: row.upkeepEmail,
@@ -122,10 +124,18 @@ async function main() {
 
   await fs.mkdir(path.dirname(outputPath), { recursive: true });
   await fs.writeFile(outputPath, toCsv(rows, columns), "utf8");
+
+  const sites = {};
+  for (const row of rows) {
+    const site = row.site || "(unknown)";
+    sites[site] = (sites[site] ?? 0) + 1;
+  }
+
   console.log(
     JSON.stringify(
       {
         proposalCount: rows.length,
+        perSite: sites,
         output: outputPath,
         mapping: mappingPath,
         message: "Review this CSV before using upkeep:apply-user-updates."

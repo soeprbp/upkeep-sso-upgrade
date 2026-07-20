@@ -5,11 +5,45 @@ function count(rows, status) {
   return rows.filter((row) => row.status === status).length;
 }
 
+function countPerSite(rows, status) {
+  const map = {};
+  for (const row of rows) {
+    if (row.status === status) {
+      const site = row.site || "(unknown)";
+      map[site] = (map[site] ?? 0) + 1;
+    }
+  }
+  return map;
+}
+
 async function main() {
   const inputPath = path.resolve(process.argv[2] ?? "data/generated/user-diff.json");
   const outputPath = path.resolve(process.argv[3] ?? "data/user-readiness-summary.js");
   const payload = JSON.parse(await fs.readFile(inputPath, "utf8"));
   const rows = payload.rows ?? [];
+
+  // Read upkeep-users.json to get per-site user counts and site list
+  let perSite = {};
+  try {
+    const upkeepPayload = JSON.parse(
+      await fs.readFile(path.resolve("data/generated/upkeep-users.json"), "utf8")
+    );
+    const sites = upkeepPayload.sites ?? {};
+    const matchedPerSite = countPerSite(rows, "matched");
+    for (const [siteName, info] of Object.entries(sites)) {
+      const siteRows = rows.filter((r) => r.site === siteName);
+      const siteMatched = matchedPerSite[siteName] ?? 0;
+      perSite[siteName] = {
+        users: info.count ?? 0,
+        matched: siteMatched,
+        needsAction: siteRows.length - siteMatched,
+        status: info.status === "ok" ? "active" : "error"
+      };
+    }
+  } catch {
+    // No upkeep-users.json available — perSite stays empty
+  }
+
   await fs.mkdir(path.dirname(outputPath), { recursive: true });
   await fs.mkdir(path.resolve("data/generated"), { recursive: true });
 
@@ -94,7 +128,8 @@ async function main() {
         tone: "muted",
         description: "UpKeep account is missing an email."
       }
-    ]
+    ],
+    perSite
   };
 
   const contents = `export const userReadinessSummary = ${JSON.stringify(summary, null, 2)};\n`;

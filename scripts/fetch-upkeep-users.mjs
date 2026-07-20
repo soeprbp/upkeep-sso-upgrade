@@ -1,9 +1,10 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { toCsv } from "../lib/csv.mjs";
-import { normalizeUpKeepUser, UpKeepClient } from "../lib/upkeep-client.mjs";
+import { normalizeUpKeepUser, createSiteClients } from "../lib/upkeep-client.mjs";
 
 const columns = [
+  { key: "site", header: "site" },
   { key: "id", header: "id" },
   { key: "email", header: "email" },
   { key: "displayName", header: "displayName" },
@@ -20,32 +21,54 @@ async function main() {
   const outputDir = path.resolve(process.cwd(), "data/generated");
   await fs.mkdir(outputDir, { recursive: true });
 
-  const client = UpKeepClient.fromEnv();
-  const users = (await client.listPaginated(endpoint)).map(normalizeUpKeepUser);
+  const clients = await createSiteClients();
+  const allUsers = [];
+  const siteSummaries = {};
+
+  for (const [siteName, client] of clients) {
+    try {
+      const rawUsers = await client.listPaginated(endpoint);
+      const users = rawUsers.map((u) => ({
+        ...normalizeUpKeepUser(u),
+        site: siteName
+      }));
+      allUsers.push(...users);
+      siteSummaries[siteName] = { count: users.length, status: "ok" };
+      console.log(`  ${siteName}: ${users.length} users`);
+    } catch (error) {
+      siteSummaries[siteName] = {
+        count: 0,
+        status: "error",
+        message: error instanceof Error ? error.message : String(error)
+      };
+      console.warn(`  ${siteName}: FAILED — ${error instanceof Error ? error.message : error}`);
+    }
+  }
+
   const timestamp = new Date().toISOString();
   const expectedMinimum = Number(process.env.UPKEEP_EXPECTED_MIN_USERS ?? 0);
   const coverage = {
     expectedMinimum,
-    actual: users.length,
-    status: expectedMinimum > 0 && users.length < expectedMinimum ? "below_expected" : "ok",
+    actual: allUsers.length,
+    status: expectedMinimum > 0 && allUsers.length < expectedMinimum ? "below_expected" : "ok",
     message:
-      expectedMinimum > 0 && users.length < expectedMinimum
-        ? `UpKeep returned ${users.length} users, below expected minimum ${expectedMinimum}. Verify API credentials have whole-environment visibility.`
-        : "UpKeep user export met the configured minimum."
+      expectedMinimum > 0 && allUsers.length < expectedMinimum
+        ? `UpKeep returned ${allUsers.length} users across ${clients.size} site(s), below expected minimum ${expectedMinimum}. Verify each site's API credentials have full visibility.`
+        : `UpKeep user export met the configured minimum across ${clients.size} site(s).`
   };
 
   await fs.writeFile(
     path.join(outputDir, "upkeep-users.json"),
-    `${JSON.stringify({ extractedAt: timestamp, endpoint, coverage, users }, null, 2)}\n`,
+    `${JSON.stringify({ extractedAt: timestamp, endpoint, sites: siteSummaries, coverage, users: allUsers }, null, 2)}\n`,
     "utf8"
   );
   await fs.writeFile(
     path.join(outputDir, "upkeep-users.csv"),
-    toCsv(users, columns),
+    toCsv(allUsers, columns),
     "utf8"
   );
 
-  console.log(`Fetched ${users.length} UpKeep users from ${endpoint}.`);
+  console.log(`\nFetched ${allUsers.length} total UpKeep users from ${clients.size} site(s).`);
   if (coverage.status !== "ok") {
     console.warn(coverage.message);
   }

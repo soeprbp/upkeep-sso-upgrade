@@ -57,7 +57,15 @@ async function main() {
   await fs.mkdir(outputDir, { recursive: true });
 
   const upkeepPayload = await readUpKeepUsers(upkeepPath);
-  const upkeepUsers = upkeepPayload.users;
+  // Deduplicate by email — each person may appear in multiple sites via linked accounts
+  const seenEmails = new Set();
+  const upkeepUsers = upkeepPayload.users.filter((u) => {
+    if (!u.email || seenEmails.has(u.email)) {
+      return false;
+    }
+    seenEmails.add(u.email);
+    return true;
+  });
   const entraUsers = entraCsvPath
     ? await readEntraUsersFromCsv(path.resolve(entraCsvPath))
     : await fetchEntraUsersFromGraph();
