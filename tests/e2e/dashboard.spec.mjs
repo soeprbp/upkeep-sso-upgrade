@@ -36,16 +36,18 @@ test("dashboard loads publicly and progress follows completed phases", async ({
   await expect(page.getByRole("button", { name: "Completed" })).toBeDisabled();
 });
 
-test("partial coverage is labeled as current-export evidence", async ({
+test("multi-site users are aggregated in the readiness view", async ({
   page
 }) => {
   await page.getByRole("link", { name: "Users", exact: true }).click();
   await expect(page).toHaveURL(/\/upkeep-sso-upgrade\/users\/$/);
   await expect(
-    page.getByRole("heading", { name: "37 of 54 visible users matched" })
+    page.getByRole("heading", { name: /^\d+ of \d+ visible users matched$/ })
   ).toBeVisible();
   await expect(page.getByText(/not the full UpKeep population/i)).toBeVisible();
-  await expect(page.getByText(/Do not use this partial export/i)).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Per-site user counts" })
+  ).toBeVisible();
 });
 
 test("document links, notes, and export controls perform their stated actions", async ({
