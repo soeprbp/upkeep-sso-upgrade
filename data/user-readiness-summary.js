@@ -1,5 +1,5 @@
 export const userReadinessSummary = {
-  "generatedAt": "2026-07-20T17:23:18.580Z",
+  "generatedAt": "2026-07-20T20:23:01.888Z",
   "source": "Local UpKeep export compared with local AD lookup",
   "totals": {
     "upkeepUsers": 317,
@@ -82,116 +82,116 @@ export const userReadinessSummary = {
   "perSite": {
     "Welch Packaging (Default)": {
       "users": 53,
-      "matched": 0,
-      "needsAction": 0,
+      "matched": 35,
+      "needsAction": 18,
       "status": "active"
     },
     "Ohio Corr": {
       "users": 16,
-      "matched": 0,
-      "needsAction": 0,
+      "matched": 12,
+      "needsAction": 4,
       "status": "active"
     },
     "Bridgeview": {
       "users": 26,
-      "matched": 0,
-      "needsAction": 0,
+      "matched": 12,
+      "needsAction": 14,
       "status": "active"
     },
     "Green Meadows Paper Company": {
       "users": 29,
       "matched": 0,
-      "needsAction": 0,
+      "needsAction": 29,
       "status": "active"
     },
     "Indy Corr": {
       "users": 19,
-      "matched": 0,
-      "needsAction": 0,
+      "matched": 17,
+      "needsAction": 2,
       "status": "active"
     },
     "Detroit": {
       "users": 10,
-      "matched": 0,
-      "needsAction": 0,
+      "matched": 6,
+      "needsAction": 4,
       "status": "active"
     },
     "Lexington": {
       "users": 6,
-      "matched": 0,
-      "needsAction": 0,
+      "matched": 1,
+      "needsAction": 5,
       "status": "active"
     },
     "Marion": {
       "users": 6,
       "matched": 0,
-      "needsAction": 0,
+      "needsAction": 6,
       "status": "active"
     },
     "Lincoln": {
       "users": 9,
-      "matched": 0,
-      "needsAction": 0,
+      "matched": 5,
+      "needsAction": 4,
       "status": "active"
     },
     "Nashville Box": {
       "users": 3,
       "matched": 0,
-      "needsAction": 0,
+      "needsAction": 3,
       "status": "active"
     },
     "Cleveland": {
       "users": 19,
-      "matched": 0,
-      "needsAction": 0,
+      "matched": 7,
+      "needsAction": 12,
       "status": "active"
     },
     "Indy Brown Box": {
       "users": 14,
-      "matched": 0,
-      "needsAction": 0,
+      "matched": 10,
+      "needsAction": 4,
       "status": "active"
     },
     "Demo Site": {
       "users": 16,
       "matched": 0,
-      "needsAction": 0,
+      "needsAction": 16,
       "status": "active"
     },
     "Columbus": {
       "users": 14,
-      "matched": 0,
-      "needsAction": 0,
+      "matched": 5,
+      "needsAction": 9,
       "status": "active"
     },
     "Atcorr": {
       "users": 10,
-      "matched": 0,
-      "needsAction": 0,
+      "matched": 3,
+      "needsAction": 7,
       "status": "active"
     },
     "Excel": {
       "users": 22,
-      "matched": 0,
-      "needsAction": 0,
+      "matched": 14,
+      "needsAction": 8,
       "status": "active"
     },
     "ElkCorr": {
       "users": 15,
-      "matched": 0,
-      "needsAction": 0,
+      "matched": 10,
+      "needsAction": 5,
       "status": "active"
     },
     "Toledo": {
       "users": 15,
-      "matched": 0,
-      "needsAction": 0,
+      "matched": 11,
+      "needsAction": 4,
       "status": "active"
     },
     "PAX": {
       "users": 15,
-      "matched": 0,
-      "needsAction": 0,
+      "matched": 6,
+      "needsAction": 9,
       "status": "active"
     }
   }

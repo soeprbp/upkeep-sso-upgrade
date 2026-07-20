@@ -1,0 +1,377 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - complementary [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]: U
+        - generic [ref=e7]:
+          - paragraph [ref=e8]: Welch Packaging
+          - heading "UpKeep SSO Upgrade" [level=1] [ref=e9]
+      - generic [ref=e10]:
+        - generic [ref=e11]:
+          - generic [ref=e12]: Project status
+          - generic [ref=e13]: Active
+        - paragraph [ref=e17]: Transition local UpKeep credentials to Entra ID SSO with a two-week, phased rollout and SSO-only cutover.
+      - generic [ref=e18]:
+        - text: Source
+        - generic [ref=e19]:
+          - strong [ref=e20]: OAuth Implementation Plan for Welch
+          - generic [ref=e21]: 2-week rollout
+          - generic [ref=e22]: ~110 UpKeep users
+          - generic [ref=e23]: ~90% Welch email addresses
+      - generic [ref=e24]:
+        - text: Published data
+        - paragraph [ref=e25]: Public, sanitized project totals only. Credentials and user-level exports remain local and are not published.
+      - navigation [ref=e26]:
+        - button "Overview" [ref=e27] [cursor=pointer]
+        - button "Timeline" [ref=e37] [cursor=pointer]
+        - link "Users" [ref=e44] [cursor=pointer]:
+          - /url: /upkeep-sso-upgrade/users/
+        - button "Risks" [ref=e53] [cursor=pointer]
+        - link "Docs" [ref=e60] [cursor=pointer]:
+          - /url: https://github.com/soeprbp/upkeep-sso-upgrade/tree/main/docs
+        - link "GitHub" [ref=e68] [cursor=pointer]:
+          - /url: https://github.com/soeprbp/upkeep-sso-upgrade
+        - button "Actions" [ref=e76] [cursor=pointer]
+        - button "Notes" [ref=e84] [cursor=pointer]
+      - generic [ref=e91]:
+        - button "Technical checklist" [ref=e92]
+        - generic [ref=e96]:
+          - generic [ref=e97]: BS
+          - generic [ref=e98]:
+            - strong [ref=e99]: Brent Soper
+            - generic [ref=e100]: Welch Packaging
+    - generic [ref=e101]:
+      - generic [ref=e102]:
+        - generic [ref=e103]:
+          - button "Open menu" [expanded] [ref=e104]
+          - generic [ref=e106]:
+            - paragraph [ref=e107]: Implementation workspace
+            - heading "UpKeep SSO Upgrade" [level=2] [ref=e108]
+            - generic [ref=e109]:
+              - generic [ref=e110]: Monitoring
+              - generic [ref=e114]: "Current Phase: 3 of 7"
+              - generic [ref=e117]: "Overall Progress: 0%"
+        - generic [ref=e122]: Data refreshed Jul 20, 2026
+      - generic [ref=e126]:
+        - generic [ref=e127]:
+          - heading "Rollout Timeline (2 Weeks)" [level=3] [ref=e128]
+          - generic [ref=e129]: 7 phases
+        - generic [ref=e132]:
+          - button "Planning & prerequisites Week 1, Days 1-2" [ref=e133]:
+            - generic [ref=e137]: Planning & prerequisites
+            - generic [ref=e138]: Week 1, Days 1-2
+          - button "Technical integration setup Week 1, Days 3-4" [ref=e139]:
+            - generic [ref=e143]: Technical integration setup
+            - generic [ref=e144]: Week 1, Days 3-4
+          - button "Communications & readiness Week 1, ongoing" [ref=e145]:
+            - generic [ref=e149]: Communications & readiness
+            - generic [ref=e150]: Week 1, ongoing
+          - button "Pilot rollout Week 2, Days 1-2" [ref=e151]:
+            - generic [ref=e155]: Pilot rollout
+            - generic [ref=e156]: Week 2, Days 1-2
+          - button "Phased full rollout Week 2, Days 3-4" [ref=e157]:
+            - generic [ref=e161]: Phased full rollout
+            - generic [ref=e162]: Week 2, Days 3-4
+          - button "Final cutover Week 2, Day 5" [ref=e163]:
+            - generic [ref=e167]: Final cutover
+            - generic [ref=e168]: Week 2, Day 5
+          - button "Training & support Ongoing" [ref=e169]:
+            - generic [ref=e173]: Training & support
+            - generic [ref=e174]: Ongoing
+      - generic [ref=e175]:
+        - article [ref=e176]:
+          - generic [ref=e177]:
+            - generic [ref=e178]:
+              - paragraph [ref=e179]: Phase detail
+              - 'heading "Phase 3: Communications & readiness" [level=3] [ref=e180]'
+            - generic [ref=e181]: Monitoring
+          - generic [ref=e182]:
+            - generic [ref=e183]:
+              - text: Objective
+              - paragraph [ref=e184]: Prepare the user-facing messaging, quick guides, and helpdesk notes so the transition feels familiar instead of abrupt.
+            - generic [ref=e185]:
+              - text: Scope
+              - paragraph [ref=e186]: Announcement email • Pilot instructions • Wave communications • Quick guide and FAQ • Helpdesk prep
+            - generic [ref=e187]:
+              - text: Deliverables
+              - list [ref=e188]:
+                - listitem [ref=e189]:
+                  - generic [ref=e193]: Send the initial user announcement
+                - listitem [ref=e194]:
+                  - generic [ref=e198]: Prepare the pilot group instructions
+                - listitem [ref=e199]:
+                  - generic [ref=e203]: Package mobile and web login guidance
+                - listitem [ref=e204]:
+                  - generic [ref=e208]: Brief the support desk on common issues
+            - generic [ref=e209]:
+              - generic [ref=e210]: Progress
+              - generic [ref=e212]: 0%
+            - generic [ref=e213]:
+              - generic [ref=e214]:
+                - text: Phase Owner
+                - strong [ref=e215]: Communications + IT support
+              - generic [ref=e216]:
+                - text: Target Window
+                - strong [ref=e217]: Week 1, ongoing
+        - article [ref=e218]:
+          - generic [ref=e220]:
+            - paragraph [ref=e221]: Checklist
+            - heading "Phase milestone checklist" [level=3] [ref=e222]
+          - generic [ref=e223]:
+            - generic [ref=e224]:
+              - generic [ref=e225]: "1"
+              - generic [ref=e226]: Send the initial user announcement
+            - generic [ref=e227]:
+              - generic [ref=e228]: "2"
+              - generic [ref=e229]: Prepare the pilot group instructions
+            - generic [ref=e230]:
+              - generic [ref=e231]: "3"
+              - generic [ref=e232]: Package mobile and web login guidance
+            - generic [ref=e233]:
+              - generic [ref=e234]: "4"
+              - generic [ref=e235]: Brief the support desk on common issues
+        - article [ref=e236]:
+          - generic [ref=e237]:
+            - generic [ref=e238]:
+              - paragraph [ref=e239]: Readiness
+              - heading "Users & identity readiness" [level=3] [ref=e240]
+            - generic [ref=e241]: i
+          - generic [ref=e242]:
+            - generic [ref=e243]:
+              - generic [ref=e244]: "317"
+              - generic [ref=e245]: UpKeep users
+            - generic [ref=e246]:
+              - generic [ref=e247]: 49%
+              - generic [ref=e248]: visible export matched
+            - generic [ref=e249]:
+              - generic [ref=e250]: "154"
+              - generic [ref=e251]: Matched AD users
+            - generic [ref=e252]:
+              - generic [ref=e253]: "163"
+              - generic [ref=e254]: need action in export
+          - generic [ref=e255]:
+            - strong [ref=e256]: Local UpKeep export compared with local AD lookup
+            - generic [ref=e257]:
+              - generic [ref=e258]: 19 of 19 sites fetched
+              - link "View users page" [ref=e259] [cursor=pointer]:
+                - /url: /upkeep-sso-upgrade/users/
+        - article [ref=e260]:
+          - generic [ref=e262]:
+            - paragraph [ref=e263]: Technical setup
+            - heading "Technical setup status" [level=3] [ref=e264]
+          - generic [ref=e265]:
+            - generic [ref=e266]:
+              - generic [ref=e271]: Verify the Welch domain in Entra ID
+              - generic [ref=e272]: Configured
+            - generic [ref=e273]:
+              - generic [ref=e278]: Confirm UpKeep SAML support and company code
+              - generic [ref=e279]: Configured
+            - generic [ref=e280]:
+              - generic [ref=e285]: Set NameID to the user email address
+              - generic [ref=e286]: Configured
+            - generic [ref=e287]:
+              - generic [ref=e292]: Download the Base64 signing certificate
+              - generic [ref=e293]: Configured
+            - generic [ref=e294]:
+              - generic [ref=e299]: Keep native login enabled until final cutover
+              - generic [ref=e300]: Configured
+            - generic [ref=e301]:
+              - generic [ref=e306]: Test both browser and mobile login paths
+              - generic [ref=e307]: Configured
+          - link "View technical runbook" [ref=e308] [cursor=pointer]:
+            - /url: https://github.com/soeprbp/upkeep-sso-upgrade/blob/main/docs/tickets/UpKeep-Entra-Setup-Ticket.md
+        - article [ref=e311]:
+          - generic [ref=e313]:
+            - paragraph [ref=e314]: Communications
+            - heading "Communications" [level=3] [ref=e315]
+          - generic [ref=e316]:
+            - paragraph [ref=e317]: Pilot Communication
+            - generic [ref=e318]:
+              - generic [ref=e319]:
+                - generic [ref=e324]: July 15, 2026 - Initial project email sent to the C-suite and managers.
+                - generic [ref=e325]: Sent
+              - generic [ref=e326]:
+                - generic [ref=e331]: Day 4 - Brief the pilot group with step-by-step login guidance.
+                - generic [ref=e332]: Planned
+          - generic [ref=e333]:
+            - paragraph [ref=e334]: Company-Wide Rollout Communication
+            - generic [ref=e335]:
+              - generic [ref=e336]:
+                - generic [ref=e341]: Week 2 - Send wave-specific reminders before each user group goes live.
+                - generic [ref=e342]: Planned
+              - generic [ref=e343]:
+                - generic [ref=e348]: Final day - Announce SSO-only access after the cutover completes.
+                - generic [ref=e349]: Planned
+          - generic [ref=e350]:
+            - article [ref=e351]:
+              - generic [ref=e352]:
+                - generic [ref=e353]:
+                  - paragraph [ref=e354]: All UpKeep users
+                  - heading "Initial user announcement" [level=4] [ref=e355]
+                - generic [ref=e356]: Draft
+              - generic [ref=e360]:
+                - generic [ref=e361]:
+                  - strong [ref=e362]: "Subject:"
+                  - text: UpKeep is moving to Microsoft Entra ID sign-in
+                - generic [ref=e363]:
+                  - strong [ref=e364]: "Preheader:"
+                  - text: Here is what is changing, when it starts, and what you need to do if you use UpKeep.
+              - paragraph [ref=e365]: This version introduces the rollout, explains the shift to Welch sign-in, and sets expectations for the phased cutover.
+              - generic [ref=e366]:
+                - paragraph [ref=e367]: Hi team,
+                - paragraph [ref=e368]: We are upgrading UpKeep sign-in to Microsoft Entra ID single sign-on (SSO). Going forward, you will use your Welch work account to access UpKeep instead of a separate UpKeep password.
+                - paragraph [ref=e369]: The change will happen in phases over the next two weeks. A small pilot group will test the new sign-in flow first, then we will move the rest of the users in waves before the final cutover.
+                - paragraph [ref=e370]: "What this means for you:"
+                - paragraph [ref=e371]: Use Continue with SSO and your Welch email address when you sign in to UpKeep.
+                - paragraph [ref=e372]: If you use the mobile app, you may be asked for the company ID provided by IT.
+                - paragraph [ref=e373]: If you are in a later rollout wave, you will receive a follow-up message with your specific timing and any extra steps.
+                - paragraph [ref=e374]: We will keep native password login available during testing and the pilot period. Once the rollout is complete, UpKeep will use SSO only.
+                - paragraph [ref=e375]: If you have trouble signing in or your account uses a non-Welch email address, please contact the helpdesk.
+                - paragraph [ref=e376]: Thanks for your patience while we make this transition.
+              - generic [ref=e377]: "Tone: straightforward, reassuring, and concise."
+            - article [ref=e378]:
+              - generic [ref=e379]:
+                - generic [ref=e380]:
+                  - paragraph [ref=e381]: IT admins and support leads
+                  - heading "Admin briefing" [level=4] [ref=e382]
+                - generic [ref=e383]: Draft
+              - generic [ref=e387]:
+                - generic [ref=e388]:
+                  - strong [ref=e389]: "Subject:"
+                  - text: "UpKeep SSO rollout: admin readiness and support checklist"
+                - generic [ref=e390]:
+                  - strong [ref=e391]: "Preheader:"
+                  - text: Here is the rollout purpose, support expectations, and the admin actions we need ready before pilot.
+              - paragraph [ref=e392]: This version is aimed at the technical owners and helpdesk so they understand the rollout plan, the support load, and the admin tasks that keep the transition safe.
+              - generic [ref=e393]:
+                - paragraph [ref=e394]: Hi team,
+                - paragraph [ref=e395]: We are moving UpKeep authentication from local passwords to Microsoft Entra ID SSO as part of the broader identity standardization effort.
+                - paragraph [ref=e396]: The rollout is phased so we can validate SAML, account matching, mobile login, and support readiness before we disable native login.
+                - paragraph [ref=e397]: "Why we are doing this:"
+                - paragraph [ref=e398]: Reduce password friction for users
+                - paragraph [ref=e399]: Improve security by relying on managed company credentials
+                - paragraph [ref=e400]: Centralize access control and user lifecycle management
+                - paragraph [ref=e401]: Lower support overhead from password resets and account confusion
+                - paragraph [ref=e402]: "What we need from admins and support:"
+                - paragraph [ref=e403]: Confirm the SSO configuration is correct in both Entra and UpKeep
+                - paragraph [ref=e404]: Review pilot users and verify email matching before their switch date
+                - paragraph [ref=e405]: Keep break-glass access available during the rollout
+                - paragraph [ref=e406]: Be ready to help users who need the company ID, mobile guidance, or account cleanup
+                - paragraph [ref=e407]: Please treat any login issue during pilot as a priority and send screenshots or exact error text to the rollout channel.
+              - generic [ref=e408]: "Tone: operational, direct, and action-focused."
+            - article [ref=e409]:
+              - generic [ref=e410]:
+                - generic [ref=e411]:
+                  - paragraph [ref=e412]: Leadership and upper management
+                  - heading "Upper management update" [level=4] [ref=e413]
+                - generic [ref=e414]: Draft
+              - generic [ref=e418]:
+                - generic [ref=e419]:
+                  - strong [ref=e420]: "Subject:"
+                  - text: UpKeep SSO upgrade underway to improve security and simplify access
+                - generic [ref=e421]:
+                  - strong [ref=e422]: "Preheader:"
+                  - text: A short leadership note on why we are making the change and how the phased rollout reduces risk.
+              - paragraph [ref=e423]: This version gives leadership the business rationale, rollout approach, and a simple reassurance that the transition is being managed in phases.
+              - generic [ref=e424]:
+                - paragraph [ref=e425]: Hi team,
+                - paragraph [ref=e426]: We are beginning an UpKeep authentication upgrade that moves users from local passwords to Microsoft Entra ID single sign-on.
+                - paragraph [ref=e427]: The goal is to make access easier for users, improve security by using company-managed credentials, and reduce the long-term support burden tied to password resets and account maintenance.
+                - paragraph [ref=e428]: We are handling this as a phased rollout rather than a single cutover so we can validate the technical configuration, support the pilot group closely, and reduce disruption.
+                - paragraph [ref=e429]: During the rollout, users will receive clear instructions before their turn, and we will keep native login available until the pilot and wave testing are stable.
+                - paragraph [ref=e430]: The key success factors are accurate account matching, a clear help path for users, and a controlled final cutover once the pilot confirms the flow is working as expected.
+                - paragraph [ref=e431]: We will share progress updates as the rollout moves through pilot, waves, and final cutover.
+              - generic [ref=e432]: "Tone: brief, business-oriented, and confidence-building."
+            - article [ref=e433]:
+              - generic [ref=e434]:
+                - generic [ref=e435]:
+                  - paragraph [ref=e436]: Pilot users
+                  - heading "Pilot group instructions" [level=4] [ref=e437]
+                - generic [ref=e438]: Draft
+              - generic [ref=e442]:
+                - generic [ref=e443]:
+                  - strong [ref=e444]: "Subject:"
+                  - text: UpKeep pilot sign-in instructions
+                - generic [ref=e445]:
+                  - strong [ref=e446]: "Preheader:"
+                  - text: Please use these steps for your first SSO login and send back any issues you see.
+              - paragraph [ref=e447]: This version gives the pilot team a clear first-login path and asks for quick feedback while native login is still available.
+              - generic [ref=e448]:
+                - paragraph [ref=e449]: Hi pilot team,
+                - paragraph [ref=e450]: You are in the first group testing the new UpKeep SSO sign-in flow.
+                - paragraph [ref=e451]: "When you are ready, please follow these steps:"
+                - paragraph [ref=e452]: Open UpKeep and select Continue with SSO on the main login screen.
+                - paragraph [ref=e453]: Enter your Welch email address when prompted.
+                - paragraph [ref=e454]: Complete the Microsoft sign-in steps if you are redirected to Entra ID.
+                - paragraph [ref=e455]: If you are using the mobile app, enter the company ID if the app asks for it.
+                - paragraph [ref=e456]: After sign-in, confirm that you can reach your normal UpKeep workspace and complete your usual work order tasks.
+                - paragraph [ref=e457]: If anything fails, send the exact error message and a screenshot to IT so we can correct it quickly.
+                - paragraph [ref=e458]: Native login will stay available during the pilot, so use the backup path if you cannot complete SSO.
+                - paragraph [ref=e459]: Please reply after your first successful login and include any friction you noticed, even if you worked around it.
+              - generic [ref=e460]: "Tone: specific, procedural, and feedback-oriented."
+          - link "Open communication documents" [ref=e461] [cursor=pointer]:
+            - /url: https://github.com/soeprbp/upkeep-sso-upgrade/tree/main/docs/communications
+        - article [ref=e464]:
+          - generic [ref=e465]:
+            - generic [ref=e466]:
+              - paragraph [ref=e467]: Risks
+              - heading "Risks" [level=3] [ref=e468]
+            - link "Back to timeline" [ref=e469] [cursor=pointer]:
+              - /url: "#timeline"
+          - generic [ref=e472]:
+            - generic [ref=e473]:
+              - generic [ref=e474]: Risk
+              - generic [ref=e475]: Severity
+              - generic [ref=e476]: Mitigation / Owner
+            - generic [ref=e477]:
+              - generic [ref=e478]: User confusion
+              - generic [ref=e479]: medium
+              - generic [ref=e480]: Use a short guide, pilot feedback, and on-call helpdesk support during the rollout windows.
+            - generic [ref=e481]:
+              - generic [ref=e482]: Users without Entra accounts
+              - generic [ref=e483]: high
+              - generic [ref=e484]: Create or migrate Welch-backed identities before their SSO switch date.
+            - generic [ref=e485]:
+              - generic [ref=e486]: SAML mismatch
+              - generic [ref=e487]: high
+              - generic [ref=e488]: Validate entity IDs, ACS URLs, NameID mapping, and certificate values before broad rollout.
+            - generic [ref=e489]:
+              - generic [ref=e490]: Mobile login friction
+              - generic [ref=e491]: medium
+              - generic [ref=e492]: Document the company code and device steps separately for the mobile app.
+            - generic [ref=e493]:
+              - generic [ref=e494]: Native login lockout
+              - generic [ref=e495]: high
+              - generic [ref=e496]: Keep a break-glass admin path and only disable password login after SSO is stable.
+        - article [ref=e497]:
+          - generic [ref=e499]:
+            - paragraph [ref=e500]: GitHub Repository
+            - heading "GitHub Repository" [level=3] [ref=e501]
+          - generic [ref=e505]:
+            - link "soeprbp/upkeep-sso-upgrade" [ref=e506] [cursor=pointer]:
+              - /url: https://github.com/soeprbp/upkeep-sso-upgrade
+            - generic [ref=e507]:
+              - generic [ref=e508]: "Hosting: GitHub.com"
+              - generic [ref=e509]: "Visibility: Public"
+            - generic [ref=e510]:
+              - generic [ref=e511]:
+                - strong [ref=e512]: Public
+                - generic [ref=e513]: Visibility
+              - generic [ref=e514]:
+                - strong [ref=e515]: main
+                - generic [ref=e516]: Default Branch
+              - generic [ref=e517]:
+                - strong [ref=e518]: Pages
+                - generic [ref=e519]: Hosting
+              - generic [ref=e520]:
+                - strong [ref=e521]: Actions
+                - generic [ref=e522]: Deployment
+            - link "Open in GitHub" [ref=e523] [cursor=pointer]:
+              - /url: https://github.com/soeprbp/upkeep-sso-upgrade
+      - generic [ref=e526]:
+        - generic [ref=e527]:
+          - button "Mark Complete" [ref=e528]
+          - button "Add Note" [ref=e532]
+          - button "Export Plan" [ref=e535]
+        - button "Print" [ref=e538]
+  - alert [ref=e543]

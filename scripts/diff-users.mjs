@@ -9,6 +9,7 @@ import { diffUsers, summarizeDiff } from "../lib/user-diff.mjs";
 const columns = [
   { key: "status" },
   { key: "action" },
+  { key: "site" },
   { key: "upkeepId" },
   { key: "upkeepEmail" },
   { key: "upkeepDisplayName" },
