@@ -15,7 +15,7 @@ test("location suggestions are review-only and never become patch fields", () =>
   assert.equal(plan.locationReviewCount, 1);
   assert.deepEqual(plan.unsupportedFields, []);
   assert.deepEqual(plan.updates, [
-    { upkeepId: "user-1", fields: { accountType: "TECH" } }
+    { upkeepId: "user-1", site: "", fields: { accountType: "TECH" } }
   ]);
 });
 
