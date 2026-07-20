@@ -19,7 +19,6 @@ import {
   Settings,
   ShieldAlert,
   Sparkles,
-  TrendingUp,
   type LucideIcon,
   UsersRound
 } from "lucide-react";
@@ -33,8 +32,7 @@ import {
 } from "../data/implementation-plan.js";
 import { userReadinessSummary } from "../data/user-readiness-summary.js";
 import {
-  calculateCompletionProgress,
-  calculateCoveragePercent
+  calculateCompletionProgress
 } from "../lib/dashboard-metrics.mjs";
 
 const repositoryUrl = "https://github.com/soeprbp/upkeep-sso-upgrade";
@@ -130,17 +128,6 @@ export default function Page() {
     completedPhaseIds.length,
     rolloutPhases.length
   );
-  const expectedUpKeepUsers =
-    userReadinessSummary.coverage?.expectedMinimum ?? 0;
-  const exportedUpKeepUsers =
-    userReadinessSummary.coverage?.actual ??
-    userReadinessSummary.totals.upkeepUsers;
-  const coveragePercent = calculateCoveragePercent(
-    exportedUpKeepUsers,
-    expectedUpKeepUsers
-  );
-  const hasPartialApiCoverage =
-    userReadinessSummary.coverage?.status === "below_expected";
   const dataRefreshedAt = formatDataDate(userReadinessSummary.generatedAt);
   const siteEntries = Object.entries(userReadinessSummary.perSite ?? {});
   const fetchedSiteCount = siteEntries.filter(
@@ -453,14 +440,7 @@ export default function Page() {
               <CalendarRange size={16} />
               Data refreshed {dataRefreshedAt}
             </span>
-            <span className="meta-item">
-              <UsersRound size={16} />
-              Expected scope: {expectedUpKeepUsers || "Not set"}
-            </span>
-            <span className="meta-item">
-              <TrendingUp size={16} />
-              API scope: {hasPartialApiCoverage ? "Partial" : "Complete"}
-            </span>
+
           </div>
         </header>
 
@@ -622,54 +602,6 @@ export default function Page() {
                   {fetchedSiteCount} of {totalSiteCount} sites fetched
                 </span>
                 <Link href="/users">View users page</Link>
-              </div>
-            </div>
-          </article>
-
-          <article className="panel">
-            <div className="panel-head">
-              <div>
-                <p className="section-label">API coverage</p>
-                <h3>UpKeep user export scope</h3>
-              </div>
-              <span
-                className={`status-pill ${hasPartialApiCoverage ? "tone-watch" : "tone-done"}`}
-              >
-                {hasPartialApiCoverage ? "Partial" : "Complete"}
-              </span>
-            </div>
-
-            <div className="coverage-card">
-              <div className="coverage-meter-head">
-                <div>
-                  <span className="metric-value">{exportedUpKeepUsers}</span>
-                  <span className="metric-label">
-                    users visible through API
-                  </span>
-                </div>
-                <div>
-                  <span className="metric-value">
-                    {expectedUpKeepUsers || "~117"}
-                  </span>
-                  <span className="metric-label">expected full scope</span>
-                </div>
-              </div>
-              <div
-                className="progress-track"
-                aria-label={`${coveragePercent}% API coverage`}
-              >
-                <span
-                  className="progress-fill coverage-fill"
-                  style={{ width: `${coveragePercent}%` }}
-                />
-              </div>
-              <div className="coverage-note">
-                <TrendingUp size={16} />
-                <span>
-                  Access update pending. Re-run the UpKeep export when the
-                  account scope changes; this panel should move toward the full
-                  user population.
-                </span>
               </div>
             </div>
           </article>
