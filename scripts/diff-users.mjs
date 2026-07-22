@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { toCsv } from "../lib/csv.mjs";
 import { fetchEntraUsersFromGraph, readEntraUsersFromCsv } from "../lib/entra-users.mjs";
-import { loadDotEnv } from "../lib/env.mjs";
+import { isUpKeepSiteIgnored, loadDotEnv } from "../lib/env.mjs";
 import { loadPayrollUsers } from "../lib/payroll-users.mjs";
 import { diffUsers, summarizeDiff } from "../lib/user-diff.mjs";
 
@@ -59,7 +59,9 @@ async function main() {
 
   const upkeepPayload = await readUpKeepUsers(upkeepPath);
   // Keep each site account so remediation remains attributable to every UpKeep site.
-  const upkeepUsers = upkeepPayload.users;
+  const upkeepUsers = upkeepPayload.users.filter(
+    (user) => !isUpKeepSiteIgnored(user.site)
+  );
   const entraUsers = entraCsvPath
     ? await readEntraUsersFromCsv(path.resolve(entraCsvPath))
     : await fetchEntraUsersFromGraph();

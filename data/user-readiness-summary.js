@@ -1,15 +1,15 @@
 export const userReadinessSummary = {
-  "generatedAt": "2026-07-22T20:22:03.182Z",
+  "generatedAt": "2026-07-22T20:35:51.649Z",
   "source": "All-site UpKeep export compared with local AD and payroll",
   "totals": {
-    "upkeepUsers": 300,
+    "upkeepUsers": 271,
     "matched": 125,
-    "needsAction": 175,
+    "needsAction": 146,
     "missingUpkeepEmail": 0,
     "missingAdUser": 23,
     "disabledAdUser": 23,
     "terminatedPayrollUser": 14,
-    "missingPayrollUser": 130,
+    "missingPayrollUser": 101,
     "payrollNotChecked": 0,
     "missingAdPayrollActive": 23,
     "missingAdPayrollInactive": 0,
@@ -21,7 +21,7 @@ export const userReadinessSummary = {
     "status": "ok",
     "message": "UpKeep user export met the configured minimum across 18 site(s)."
   },
-  "readinessPercent": 42,
+  "readinessPercent": 46,
   "chartSegments": [
     {
       "label": "Matched",
@@ -35,7 +35,7 @@ export const userReadinessSummary = {
     },
     {
       "label": "No payroll match",
-      "value": 130,
+      "value": 101,
       "className": "segment-risk"
     },
     {
@@ -63,7 +63,7 @@ export const userReadinessSummary = {
     },
     {
       "label": "Verify payroll identity",
-      "count": 130,
+      "count": 101,
       "tone": "danger",
       "description": "No matching payroll record was found for the UpKeep account."
     },
@@ -121,14 +121,6 @@ export const userReadinessSummary = {
       "needsAction": 15,
       "missingPayroll": 10,
       "disabledAd": 5,
-      "status": "active"
-    },
-    "Green Meadows Paper Company": {
-      "users": 29,
-      "matched": 0,
-      "needsAction": 29,
-      "missingPayroll": 29,
-      "disabledAd": 0,
       "status": "active"
     },
     "Indy Corr": {

@@ -26,7 +26,6 @@ export const upkeepInventorySummary = {
     },
     "Ohio Corr": { users: 0, locations: 0, accountTypes: [] },
     "Bridgeview": { users: 0, locations: 0, accountTypes: [] },
-    "Green Meadows Paper Company": { users: 0, locations: 0, accountTypes: [] },
     "Indy Corr": { users: 0, locations: 0, accountTypes: [] },
     "Detroit": { users: 0, locations: 0, accountTypes: [] },
     "Lexington": { users: 0, locations: 0, accountTypes: [] },

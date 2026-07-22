@@ -133,7 +133,7 @@ export default function Page() {
   const fetchedSiteCount = siteEntries.filter(
     ([, site]) => site.status === "active"
   ).length;
-  const totalSiteCount = siteEntries.length || 18;
+  const totalSiteCount = siteEntries.length || 17;
 
   useEffect(() => {
     try {

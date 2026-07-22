@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { isUpKeepSiteIgnored } from "../lib/env.mjs";
 
 function count(rows, status) {
   return rows.filter((row) => row.status === status).length;
@@ -31,6 +32,9 @@ async function main() {
     const sites = upkeepPayload.sites ?? {};
     const matchedPerSite = countPerSite(rows, "matched");
     for (const [siteName, info] of Object.entries(sites)) {
+      if (isUpKeepSiteIgnored(siteName)) {
+        continue;
+      }
       const siteRows = rows.filter((r) => r.site === siteName);
       const siteMatched = matchedPerSite[siteName] ?? 0;
       perSite[siteName] = {
