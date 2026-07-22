@@ -58,15 +58,8 @@ async function main() {
   await fs.mkdir(outputDir, { recursive: true });
 
   const upkeepPayload = await readUpKeepUsers(upkeepPath);
-  // Deduplicate by email — each person may appear in multiple sites via linked accounts
-  const seenEmails = new Set();
-  const upkeepUsers = upkeepPayload.users.filter((u) => {
-    if (!u.email || seenEmails.has(u.email)) {
-      return false;
-    }
-    seenEmails.add(u.email);
-    return true;
-  });
+  // Keep each site account so remediation remains attributable to every UpKeep site.
+  const upkeepUsers = upkeepPayload.users;
   const entraUsers = entraCsvPath
     ? await readEntraUsersFromCsv(path.resolve(entraCsvPath))
     : await fetchEntraUsersFromGraph();
@@ -76,7 +69,9 @@ async function main() {
     ? await loadPayrollUsers({ csvPath: payrollCsvPath ? path.resolve(payrollCsvPath) : null })
     : [];
 
-  const rows = diffUsers(upkeepUsers, entraUsers, payrollUsers);
+  const rows = diffUsers(upkeepUsers, entraUsers, payrollUsers, {
+    payrollChecked: Boolean(includePayroll)
+  });
   const summary = summarizeDiff(rows);
   const timestamp = new Date().toISOString();
 

@@ -118,6 +118,12 @@ export default function UsersPage() {
           <div className="readiness-grid">
             <div className="metric-card">
               <span className="metric-value">
+                {summary.totals.missingPayrollUser}
+              </span>
+              <span className="metric-label">No payroll match</span>
+            </div>
+            <div className="metric-card">
+              <span className="metric-value">
                 {summary.totals.terminatedPayrollUser}
               </span>
               <span className="metric-label">Terminated payroll</span>
@@ -157,6 +163,10 @@ export default function UsersPage() {
             <div>
               <span>{summary.totals.missingAdPayrollNotFound}</span>
               <small>not found in payroll</small>
+            </div>
+            <div>
+              <span>{summary.totals.payrollNotChecked}</span>
+              <small>payroll not checked</small>
             </div>
           </div>
         </article>
@@ -202,6 +212,8 @@ export default function UsersPage() {
               <span>Users</span>
               <span>Matched</span>
               <span>Needs action</span>
+              <span>No payroll</span>
+              <span>AD disabled</span>
               <span>Status</span>
             </div>
             {Object.entries(summary.perSite ?? {}).map(([name, site]) => (
@@ -210,6 +222,8 @@ export default function UsersPage() {
                 <span>{site.users}</span>
                 <span>{site.matched}</span>
                 <span>{site.needsAction}</span>
+                <span>{site.missingPayroll}</span>
+                <span>{site.disabledAd}</span>
                 <span className={`site-status site-status-${site.status}`}>
                   {site.status === "active" ? "Fetched" : site.status === "pending" ? "Pending" : site.status}
                 </span>

@@ -1337,11 +1337,13 @@ button {
   margin-top: 12px;
   display: grid;
   gap: 0;
+  overflow-x: auto;
 }
 
 .site-table-head {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 2fr repeat(6, minmax(82px, 1fr));
+  min-width: 850px;
   gap: 12px;
   padding: 10px 12px;
   font-size: 12px;
@@ -1353,7 +1355,8 @@ button {
 
 .site-table-row {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 2fr repeat(6, minmax(82px, 1fr));
+  min-width: 850px;
   gap: 12px;
   padding: 10px 12px;
   align-items: center;
@@ -1404,7 +1407,7 @@ button {
 @media (max-width: 820px) {
   .site-table-head,
   .site-table-row {
-    grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1.5fr repeat(6, minmax(82px, 1fr));
     font-size: 12px;
     gap: 8px;
     padding: 8px 10px;

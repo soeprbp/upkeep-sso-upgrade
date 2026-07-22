@@ -1,5 +1,18 @@
 $ErrorActionPreference = "Stop"
 
+if (Test-Path -LiteralPath ".env.local") {
+    Get-Content -LiteralPath ".env.local" |
+        Where-Object { $_ -match '^\s*[^#][^=]+=' } |
+        ForEach-Object {
+            $index = $_.IndexOf("=")
+            $key = $_.Substring(0, $index).Trim()
+            $value = $_.Substring($index + 1).Trim().Trim('"').Trim("'")
+            if (-not [Environment]::GetEnvironmentVariable($key, "Process")) {
+                [Environment]::SetEnvironmentVariable($key, $value, "Process")
+            }
+        }
+}
+
 function Invoke-NpmStep {
     param(
         [Parameter(Mandatory = $true)]

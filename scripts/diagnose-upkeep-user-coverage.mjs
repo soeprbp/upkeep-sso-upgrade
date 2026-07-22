@@ -74,7 +74,16 @@ async function main() {
     }
 
     const allUsers = await client.listPaginated("/users", { limit: 25, maxPages: 10 });
-    const teams = await client.listPaginated("/teams");
+    let teams = [];
+    let teamsStatus = "ok";
+    try {
+      teams = await client.listPaginated("/teams");
+    } catch (error) {
+      teamsStatus = "unavailable";
+      console.warn(
+        `  ${siteName}: teams unavailable (${error instanceof Error ? error.message.replace(/ - .*/, "") : error})`
+      );
+    }
     const teamUserIds = new Set();
     const teamCounts = [];
     for (const team of teams) {
@@ -90,6 +99,7 @@ async function main() {
       coverageStatus: allUsers.length < expectedMinimum ? "below_expected" : "ok",
       pageTests,
       teams: teams.length,
+      teamsStatus,
       teamUserUnionCount: teamUserIds.size,
       teamCounts
     };

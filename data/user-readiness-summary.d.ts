@@ -9,6 +9,8 @@ export type UserReadinessSummary = {
     missingAdUser: number;
     disabledAdUser: number;
     terminatedPayrollUser: number;
+    missingPayrollUser: number;
+    payrollNotChecked: number;
     missingAdPayrollActive: number;
     missingAdPayrollInactive: number;
     missingAdPayrollNotFound: number;
@@ -23,6 +25,8 @@ export type UserReadinessSummary = {
     users: number;
     matched: number;
     needsAction: number;
+    missingPayroll: number;
+    disabledAd: number;
     status: string;
   }>;
   readinessPercent: number;

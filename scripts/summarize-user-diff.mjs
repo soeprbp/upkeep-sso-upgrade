@@ -37,6 +37,12 @@ async function main() {
         users: info.count ?? 0,
         matched: siteMatched,
         needsAction: siteRows.length - siteMatched,
+        missingPayroll: siteRows.filter(
+          (row) => row.hasMissingPayroll || row.payrollMatchStatus === "not_found"
+        ).length,
+        disabledAd: siteRows.filter(
+          (row) => row.hasDisabledAd || row.status === "disabled_entra_user"
+        ).length,
         status: info.status === "ok" ? "active" : "error"
       };
     }
@@ -50,27 +56,35 @@ async function main() {
   const matched = count(rows, "matched");
   const missingUpkeepEmail = count(rows, "missing_upkeep_email");
   const missingAdUser = count(rows, "missing_entra_user");
-  const disabledAdUser = count(rows, "disabled_entra_user");
+  const disabledAdUser = rows.filter(
+    (row) => row.hasDisabledAd || row.status === "disabled_entra_user"
+  ).length;
   const terminatedPayrollUser = count(rows, "terminated_payroll_user");
+  const missingPayrollUser = rows.filter(
+    (row) => row.hasMissingPayroll || row.payrollMatchStatus === "not_found"
+  ).length;
+  const payrollNotChecked = rows.filter(
+    (row) => row.payrollMatchStatus === "not_checked"
+  ).length;
   const missingAdPayrollActive = rows.filter(
     (row) => row.status === "missing_entra_user" && row.payrollMatchStatus === "active"
   ).length;
   const missingAdPayrollNotFound = rows.filter(
     (row) =>
       row.status === "missing_entra_user" &&
-      (!row.payrollMatchStatus || row.payrollMatchStatus === "not_checked_or_not_found")
+      row.payrollMatchStatus === "not_found"
   ).length;
   const missingAdPayrollInactive = rows.filter(
     (row) => row.status === "missing_entra_user" && row.payrollMatchStatus === "inactive"
   ).length;
   const upkeepUsers = rows.length;
-  const needsAction = missingUpkeepEmail + missingAdUser + disabledAdUser + terminatedPayrollUser;
+  const needsAction = rows.filter((row) => row.status !== "matched").length;
   const readinessPercent =
     upkeepUsers === 0 ? 0 : Math.round((matched / upkeepUsers) * 100);
 
   const summary = {
     generatedAt: payload.generatedAt ?? new Date().toISOString(),
-    source: "Local UpKeep export compared with local AD lookup",
+    source: "All-site UpKeep export compared with local AD and payroll",
     totals: {
       upkeepUsers,
       matched,
@@ -79,6 +93,8 @@ async function main() {
       missingAdUser,
       disabledAdUser,
       terminatedPayrollUser,
+      missingPayrollUser,
+      payrollNotChecked,
       missingAdPayrollActive,
       missingAdPayrollInactive,
       missingAdPayrollNotFound
@@ -93,6 +109,7 @@ async function main() {
     chartSegments: [
       { label: "Matched", value: matched, className: "segment-good" },
       { label: "Terminated payroll", value: terminatedPayrollUser, className: "segment-danger" },
+      { label: "No payroll match", value: count(rows, "missing_payroll_user"), className: "segment-risk" },
       { label: "Missing AD user", value: missingAdUser, className: "segment-risk" },
       { label: "Disabled AD user", value: disabledAdUser, className: "segment-watch" },
       { label: "Missing UpKeep email", value: missingUpkeepEmail, className: "segment-muted" }
@@ -105,10 +122,22 @@ async function main() {
         description: "UpKeep account has a matching enabled AD identity."
       },
       {
+        label: "Verify payroll identity",
+        count: missingPayrollUser,
+        tone: "danger",
+        description: "No matching payroll record was found for the UpKeep account."
+      },
+      {
         label: "Disable in UpKeep",
         count: terminatedPayrollUser,
         tone: "danger",
         description: "Payroll status is inactive or terminated."
+      },
+      {
+        label: "Run payroll reconciliation",
+        count: payrollNotChecked,
+        tone: "watch",
+        description: "Payroll data was not checked, so these accounts are not yet ready."
       },
       {
         label: "Create or migrate AD identity",
