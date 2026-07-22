@@ -5,6 +5,7 @@ import Link from "next/link";
 import {
   ArrowRight,
   BadgeCheck,
+  Building2,
   CalendarRange,
   ChevronRight,
   Circle,
@@ -55,6 +56,7 @@ const navItems: NavItem[] = [
   { label: "Overview", icon: LayoutDashboard, action: "overview" },
   { label: "Timeline", icon: CalendarRange, action: "timeline" },
   { label: "Users", icon: UsersRound, href: "/users" },
+  { label: "Sites", icon: Building2, href: "/sites" },
   { label: "Risks", icon: ShieldAlert, action: "risks" },
   { label: "Docs", icon: FileText, href: docsUrl, external: true },
   { label: "GitHub", icon: Github, href: repositoryUrl, external: true },

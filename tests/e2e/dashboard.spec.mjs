@@ -50,6 +50,20 @@ test("multi-site users are aggregated in the readiness view", async ({
   ).toBeVisible();
 });
 
+test("site usage page distinguishes production, dormant, and test sites", async ({
+  page
+}) => {
+  await page.getByRole("link", { name: "Sites", exact: true }).click();
+  await expect(page).toHaveURL(/\/upkeep-sso-upgrade\/sites\/$/);
+  await expect(
+    page.getByRole("heading", { name: "14 production sites are active" })
+  ).toBeVisible();
+  await expect(page.getByText("Green Meadows Paper Company")).toBeVisible();
+  await expect(
+    page.getByLabel("Site status totals").getByText("Test only", { exact: true })
+  ).toBeVisible();
+});
+
 test("document links, notes, and export controls perform their stated actions", async ({
   page
 }) => {
