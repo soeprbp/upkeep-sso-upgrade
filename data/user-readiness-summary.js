@@ -1,27 +1,27 @@
 export const userReadinessSummary = {
-  "generatedAt": "2026-07-22T17:19:56.138Z",
+  "generatedAt": "2026-07-22T20:22:03.182Z",
   "source": "All-site UpKeep export compared with local AD and payroll",
   "totals": {
-    "upkeepUsers": 316,
+    "upkeepUsers": 300,
     "matched": 125,
-    "needsAction": 191,
+    "needsAction": 175,
     "missingUpkeepEmail": 0,
-    "missingAdUser": 25,
+    "missingAdUser": 23,
     "disabledAdUser": 23,
-    "terminatedPayrollUser": 17,
-    "missingPayrollUser": 141,
+    "terminatedPayrollUser": 14,
+    "missingPayrollUser": 130,
     "payrollNotChecked": 0,
-    "missingAdPayrollActive": 25,
+    "missingAdPayrollActive": 23,
     "missingAdPayrollInactive": 0,
     "missingAdPayrollNotFound": 0
   },
   "coverage": {
     "expectedMinimum": 117,
-    "actual": 316,
+    "actual": 300,
     "status": "ok",
-    "message": "UpKeep user export met the configured minimum across 19 site(s)."
+    "message": "UpKeep user export met the configured minimum across 18 site(s)."
   },
-  "readinessPercent": 40,
+  "readinessPercent": 42,
   "chartSegments": [
     {
       "label": "Matched",
@@ -30,17 +30,17 @@ export const userReadinessSummary = {
     },
     {
       "label": "Terminated payroll",
-      "value": 17,
+      "value": 14,
       "className": "segment-danger"
     },
     {
       "label": "No payroll match",
-      "value": 141,
+      "value": 130,
       "className": "segment-risk"
     },
     {
       "label": "Missing AD user",
-      "value": 25,
+      "value": 23,
       "className": "segment-risk"
     },
     {
@@ -63,13 +63,13 @@ export const userReadinessSummary = {
     },
     {
       "label": "Verify payroll identity",
-      "count": 141,
+      "count": 130,
       "tone": "danger",
       "description": "No matching payroll record was found for the UpKeep account."
     },
     {
       "label": "Disable in UpKeep",
-      "count": 17,
+      "count": 14,
       "tone": "danger",
       "description": "Payroll status is inactive or terminated."
     },
@@ -81,7 +81,7 @@ export const userReadinessSummary = {
     },
     {
       "label": "Create or migrate AD identity",
-      "count": 25,
+      "count": 23,
       "tone": "risk",
       "description": "UpKeep account did not match a local AD user."
     },
@@ -195,14 +195,6 @@ export const userReadinessSummary = {
       "disabledAd": 1,
       "status": "active"
     },
-    "Demo Site": {
-      "users": 16,
-      "matched": 0,
-      "needsAction": 16,
-      "missingPayroll": 12,
-      "disabledAd": 0,
-      "status": "active"
-    },
     "Columbus": {
       "users": 14,
       "matched": 4,
@@ -223,7 +215,7 @@ export const userReadinessSummary = {
       "users": 21,
       "matched": 11,
       "needsAction": 10,
-      "missingPayroll": 6,
+      "missingPayroll": 7,
       "disabledAd": 1,
       "status": "active"
     },

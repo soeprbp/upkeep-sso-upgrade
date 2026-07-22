@@ -35,7 +35,6 @@ export const upkeepInventorySummary = {
     "Nashville Box": { users: 0, locations: 0, accountTypes: [] },
     "Cleveland": { users: 0, locations: 0, accountTypes: [] },
     "Indy Brown Box": { users: 0, locations: 0, accountTypes: [] },
-    "Demo Site": { users: 0, locations: 0, accountTypes: [] },
     "Columbus": { users: 0, locations: 0, accountTypes: [] },
     "Atcorr": { users: 0, locations: 0, accountTypes: [] },
     "Excel": { users: 0, locations: 0, accountTypes: [] },
