@@ -18,8 +18,12 @@ function countPerSite(rows, status) {
 }
 
 async function main() {
-  const inputPath = path.resolve(process.argv[2] ?? "data/generated/user-diff.json");
-  const outputPath = path.resolve(process.argv[3] ?? "data/user-readiness-summary.js");
+  const inputPath = path.resolve(
+    process.argv[2] ?? "data/generated/user-diff.json"
+  );
+  const outputPath = path.resolve(
+    process.argv[3] ?? "data/user-readiness-summary.js"
+  );
   const payload = JSON.parse(await fs.readFile(inputPath, "utf8"));
   const rows = payload.rows ?? [];
 
@@ -27,7 +31,10 @@ async function main() {
   let perSite = {};
   try {
     const upkeepPayload = JSON.parse(
-      await fs.readFile(path.resolve("data/generated/upkeep-users.json"), "utf8")
+      await fs.readFile(
+        path.resolve("data/generated/upkeep-users.json"),
+        "utf8"
+      )
     );
     const sites = upkeepPayload.sites ?? {};
     const matchedPerSite = countPerSite(rows, "matched");
@@ -38,11 +45,12 @@ async function main() {
       const siteRows = rows.filter((r) => r.site === siteName);
       const siteMatched = matchedPerSite[siteName] ?? 0;
       perSite[siteName] = {
-        users: info.count ?? 0,
+        users: siteRows.length,
         matched: siteMatched,
         needsAction: siteRows.length - siteMatched,
         missingPayroll: siteRows.filter(
-          (row) => row.hasMissingPayroll || row.payrollMatchStatus === "not_found"
+          (row) =>
+            row.hasMissingPayroll || row.payrollMatchStatus === "not_found"
         ).length,
         disabledAd: siteRows.filter(
           (row) => row.hasDisabledAd || row.status === "disabled_entra_user"
@@ -71,7 +79,8 @@ async function main() {
     (row) => row.payrollMatchStatus === "not_checked"
   ).length;
   const missingAdPayrollActive = rows.filter(
-    (row) => row.status === "missing_entra_user" && row.payrollMatchStatus === "active"
+    (row) =>
+      row.status === "missing_entra_user" && row.payrollMatchStatus === "active"
   ).length;
   const missingAdPayrollNotFound = rows.filter(
     (row) =>
@@ -79,7 +88,9 @@ async function main() {
       row.payrollMatchStatus === "not_found"
   ).length;
   const missingAdPayrollInactive = rows.filter(
-    (row) => row.status === "missing_entra_user" && row.payrollMatchStatus === "inactive"
+    (row) =>
+      row.status === "missing_entra_user" &&
+      row.payrollMatchStatus === "inactive"
   ).length;
   const upkeepUsers = rows.length;
   const needsAction = rows.filter((row) => row.status !== "matched").length;
@@ -112,11 +123,31 @@ async function main() {
     readinessPercent,
     chartSegments: [
       { label: "Matched", value: matched, className: "segment-good" },
-      { label: "Terminated payroll", value: terminatedPayrollUser, className: "segment-danger" },
-      { label: "No payroll match", value: count(rows, "missing_payroll_user"), className: "segment-risk" },
-      { label: "Missing AD user", value: missingAdUser, className: "segment-risk" },
-      { label: "Disabled AD user", value: disabledAdUser, className: "segment-watch" },
-      { label: "Missing UpKeep email", value: missingUpkeepEmail, className: "segment-muted" }
+      {
+        label: "Terminated payroll",
+        value: terminatedPayrollUser,
+        className: "segment-danger"
+      },
+      {
+        label: "No payroll match",
+        value: count(rows, "missing_payroll_user"),
+        className: "segment-risk"
+      },
+      {
+        label: "Missing AD user",
+        value: missingAdUser,
+        className: "segment-risk"
+      },
+      {
+        label: "Disabled AD user",
+        value: count(rows, "disabled_entra_user"),
+        className: "segment-watch"
+      },
+      {
+        label: "Missing UpKeep email",
+        value: missingUpkeepEmail,
+        className: "segment-muted"
+      }
     ],
     actionBuckets: [
       {
@@ -129,7 +160,8 @@ async function main() {
         label: "Verify payroll identity",
         count: missingPayrollUser,
         tone: "danger",
-        description: "No matching payroll record was found for the UpKeep account."
+        description:
+          "No matching payroll record was found for the UpKeep account."
       },
       {
         label: "Disable in UpKeep",
@@ -141,7 +173,8 @@ async function main() {
         label: "Run payroll reconciliation",
         count: payrollNotChecked,
         tone: "watch",
-        description: "Payroll data was not checked, so these accounts are not yet ready."
+        description:
+          "Payroll data was not checked, so these accounts are not yet ready."
       },
       {
         label: "Create or migrate AD identity",

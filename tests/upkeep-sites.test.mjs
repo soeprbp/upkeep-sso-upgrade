@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { isUpKeepSiteIgnored, parseUpKeepSites } from "../lib/env.mjs";
+import {
+  isUpKeepServiceAccount,
+  isUpKeepSiteIgnored,
+  parseUpKeepSites
+} from "../lib/env.mjs";
 
 function withSiteEnvironment(includeDemoSite, callback) {
   const previous = {
@@ -65,4 +69,10 @@ test("applies ignored-site policy to previously exported records", () => {
     assert.equal(isUpKeepSiteIgnored("Green Meadows Paper Company"), true);
     assert.equal(isUpKeepSiteIgnored("Plant A"), false);
   });
+});
+
+test("identifies plus-address accounts as UpKeep service accounts", () => {
+  assert.equal(isUpKeepServiceAccount("soperbp+ohio@welchpkg.com"), true);
+  assert.equal(isUpKeepServiceAccount("worker@welchpkg.com"), false);
+  assert.equal(isUpKeepServiceAccount(""), false);
 });

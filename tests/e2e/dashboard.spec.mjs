@@ -44,7 +44,7 @@ test("multi-site users are aggregated in the readiness view", async ({
   await expect(
     page.getByRole("heading", { name: /^\d+ of \d+ visible users matched$/ })
   ).toBeVisible();
-  await expect(page.getByText(/not the full UpKeep population/i)).toBeVisible();
+  await expect(page.getByText(/service accounts from employee/i)).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Per-site user counts" })
   ).toBeVisible();
@@ -60,7 +60,9 @@ test("site usage page distinguishes production, dormant, and test sites", async 
   ).toBeVisible();
   await expect(page.getByText("Green Meadows Paper Company")).toBeVisible();
   await expect(
-    page.getByLabel("Site status totals").getByText("Test only", { exact: true })
+    page
+      .getByLabel("Site status totals")
+      .getByText("Test only", { exact: true })
   ).toBeVisible();
 });
 

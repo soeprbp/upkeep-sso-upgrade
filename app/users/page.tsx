@@ -36,6 +36,7 @@ export default function UsersPage() {
   const summary = userReadinessSummary;
   const inventory = upkeepInventorySummary;
   const total = summary.totals.upkeepUsers;
+  const serviceAccountCount = Math.max(0, summary.coverage.actual - total);
   const topActions = summary.actionBuckets.filter((bucket) => bucket.count > 0);
 
   return (
@@ -63,15 +64,16 @@ export default function UsersPage() {
           </h2>
           <p className="panel-copy">
             The {summary.readinessPercent}% match rate describes only the
-            current API export, not the full UpKeep population. This page shows
-            sanitized totals; user-level details remain in ignored local files
-            under <code>data/generated</code>.
+            current production-site API export. It excludes{" "}
+            {serviceAccountCount} <code>+</code> service accounts from employee,
+            AD, and payroll readiness totals. User-level details remain in
+            ignored local files under <code>data/generated</code>.
           </p>
         </div>
         <div className="readiness-score">
           <UsersRound size={22} />
           <strong>{total}</strong>
-          <span>users visible through the current API export</span>
+          <span>employee accounts in SSO readiness scope</span>
         </div>
       </section>
 
@@ -202,9 +204,9 @@ export default function UsersPage() {
             <Globe size={16} />
           </div>
           <p className="panel-copy">
-            Each UpKeep site is a separate account. Sites with 0 users have not
-            yet been fetched — run <code>npm run users:reconcile</code> to
-            populate all sites.
+            Each UpKeep site is a separate account. Counts exclude{" "}
+            <code>+</code> service accounts, so a site with 0 users may contain
+            only service accounts rather than being unfetched.
           </p>
           <div className="site-table">
             <div className="site-table-head">
@@ -225,7 +227,11 @@ export default function UsersPage() {
                 <span>{site.missingPayroll}</span>
                 <span>{site.disabledAd}</span>
                 <span className={`site-status site-status-${site.status}`}>
-                  {site.status === "active" ? "Fetched" : site.status === "pending" ? "Pending" : site.status}
+                  {site.status === "active"
+                    ? "Fetched"
+                    : site.status === "pending"
+                      ? "Pending"
+                      : site.status}
                 </span>
               </div>
             ))}

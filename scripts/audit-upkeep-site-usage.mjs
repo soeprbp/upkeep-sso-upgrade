@@ -41,9 +41,14 @@ function summarizeRecords(records) {
   const latestTimestamp = timestamps.length ? Math.max(...timestamps) : null;
   return {
     count: records.length,
-    latestActivity: latestTimestamp ? new Date(latestTimestamp).toISOString() : null,
-    activityLast90Days: timestamps.filter((value) => NOW - value <= 90 * DAY_MS).length,
-    activityLast365Days: timestamps.filter((value) => NOW - value <= 365 * DAY_MS).length,
+    latestActivity: latestTimestamp
+      ? new Date(latestTimestamp).toISOString()
+      : null,
+    activityLast90Days: timestamps.filter((value) => NOW - value <= 90 * DAY_MS)
+      .length,
+    activityLast365Days: timestamps.filter(
+      (value) => NOW - value <= 365 * DAY_MS
+    ).length,
     status: "ok"
   };
 }
@@ -52,18 +57,77 @@ function classify(site) {
   const workOrders = site.resources.workOrders;
   const purchaseOrders = site.resources.purchaseOrders;
   if (workOrders.status === "ok" && workOrders.activityLast90Days > 0) {
-    return { classification: "active", reason: "Work-order activity recorded in the last 90 days" };
+    return {
+      classification: "active",
+      reason: "Work-order activity recorded in the last 90 days"
+    };
   }
   if (workOrders.status === "ok" && workOrders.activityLast365Days > 0) {
-    return { classification: "active_low_frequency", reason: "Work-order activity recorded in the last year" };
+    return {
+      classification: "active_low_frequency",
+      reason: "Work-order activity recorded in the last year"
+    };
   }
-  if (purchaseOrders.status === "ok" && purchaseOrders.activityLast365Days > 0) {
-    return { classification: "review", reason: "Recent purchasing activity but no recent work orders" };
+  if (
+    purchaseOrders.status === "ok" &&
+    purchaseOrders.activityLast365Days > 0
+  ) {
+    return {
+      classification: "review",
+      reason: "Recent purchasing activity but no recent work orders"
+    };
   }
   if (workOrders.status === "error" || purchaseOrders.status === "error") {
-    return { classification: "review", reason: "A primary operational API resource check failed" };
+    return {
+      classification: "review",
+      reason: "A primary operational API resource check failed"
+    };
   }
-  return { classification: "dormant", reason: "No work-order or purchasing activity found in the last year" };
+  return {
+    classification: "dormant",
+    reason: "No work-order or purchasing activity found in the last year"
+  };
+}
+
+function dashboardStatus(siteName, classification) {
+  if (siteName === "Demo Site") return "test";
+  return classification === "active" ||
+    classification === "active_low_frequency"
+    ? "active"
+    : "inactive";
+}
+
+function createDashboardSummary(generatedAt, sites) {
+  const dashboardSites = sites.map((site) => {
+    const status = dashboardStatus(site.site, site.classification);
+    const summary = {
+      name: site.site,
+      status,
+      workOrders: site.resources.workOrders.count ?? 0,
+      recentWorkOrders: site.resources.workOrders.activityLast90Days ?? 0,
+      latestActivity: site.resources.workOrders.latestActivity
+    };
+    if (site.site === "Green Meadows Paper Company") {
+      summary.note =
+        "Dormant; reserved for a future facility. Non-service users deactivated.";
+    } else if (site.site === "Demo Site") {
+      summary.note =
+        "Test activity only; permanently excluded from production reporting.";
+    }
+    return summary;
+  });
+
+  return {
+    generatedAt,
+    totals: {
+      configured: dashboardSites.length,
+      active: dashboardSites.filter((site) => site.status === "active").length,
+      inactive: dashboardSites.filter((site) => site.status === "inactive")
+        .length,
+      testOnly: dashboardSites.filter((site) => site.status === "test").length
+    },
+    sites: dashboardSites
+  };
 }
 
 async function main() {
@@ -86,7 +150,10 @@ async function main() {
 
     for (const [resourceName, endpoint] of Object.entries(ENDPOINTS)) {
       try {
-        const records = await client.listPaginated(endpoint, { limit: 200, maxPages: 50 });
+        const records = await client.listPaginated(endpoint, {
+          limit: 200,
+          maxPages: 50
+        });
         site.resources[resourceName] = summarizeRecords(records);
       } catch (error) {
         site.resources[resourceName] = {
@@ -95,7 +162,10 @@ async function main() {
           activityLast90Days: null,
           activityLast365Days: null,
           status: "error",
-          message: error instanceof Error ? error.message.replace(/ - .*/, "") : String(error)
+          message:
+            error instanceof Error
+              ? error.message.replace(/ - .*/, "")
+              : String(error)
         };
       }
     }
@@ -110,10 +180,12 @@ async function main() {
     generatedAt,
     siteCount: sites.length,
     countsByClassification: Object.fromEntries(
-      [...new Set(sites.map((site) => site.classification))].map((classification) => [
-        classification,
-        sites.filter((site) => site.classification === classification).length
-      ])
+      [...new Set(sites.map((site) => site.classification))].map(
+        (classification) => [
+          classification,
+          sites.filter((site) => site.classification === classification).length
+        ]
+      )
     ),
     sites
   };
@@ -123,9 +195,20 @@ async function main() {
     `site-usage-audit-${generatedAt.replace(/[:.]/g, "-")}.json`
   );
   await fs.mkdir(outputDir, { recursive: true });
-  await fs.writeFile(outputPath, `${JSON.stringify(summary, null, 2)}\n`, "utf8");
+  await fs.writeFile(
+    outputPath,
+    `${JSON.stringify(summary, null, 2)}\n`,
+    "utf8"
+  );
+  const dashboardSummary = createDashboardSummary(generatedAt, sites);
+  await fs.writeFile(
+    path.resolve(process.cwd(), "data", "site-usage-summary.js"),
+    `export const siteUsageSummary = ${JSON.stringify(dashboardSummary, null, 2)};\n`,
+    "utf8"
+  );
 
   console.log(`\nAudit manifest: ${outputPath}`);
+  console.log("Updated data/site-usage-summary.js");
   console.log(JSON.stringify(summary.countsByClassification));
 }
 

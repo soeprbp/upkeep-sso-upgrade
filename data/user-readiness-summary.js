@@ -1,51 +1,51 @@
 export const userReadinessSummary = {
-  "generatedAt": "2026-07-22T20:35:51.649Z",
+  "generatedAt": "2026-07-28T13:30:51.045Z",
   "source": "All-site UpKeep export compared with local AD and payroll",
   "totals": {
-    "upkeepUsers": 271,
-    "matched": 125,
-    "needsAction": 146,
+    "upkeepUsers": 204,
+    "matched": 122,
+    "needsAction": 82,
     "missingUpkeepEmail": 0,
-    "missingAdUser": 23,
+    "missingAdUser": 18,
     "disabledAdUser": 23,
-    "terminatedPayrollUser": 14,
-    "missingPayrollUser": 101,
+    "terminatedPayrollUser": 16,
+    "missingPayrollUser": 40,
     "payrollNotChecked": 0,
-    "missingAdPayrollActive": 23,
+    "missingAdPayrollActive": 18,
     "missingAdPayrollInactive": 0,
     "missingAdPayrollNotFound": 0
   },
   "coverage": {
     "expectedMinimum": 117,
-    "actual": 300,
+    "actual": 271,
     "status": "ok",
-    "message": "UpKeep user export met the configured minimum across 18 site(s)."
+    "message": "UpKeep user export met the configured minimum across 17 site(s)."
   },
-  "readinessPercent": 46,
+  "readinessPercent": 60,
   "chartSegments": [
     {
       "label": "Matched",
-      "value": 125,
+      "value": 122,
       "className": "segment-good"
     },
     {
       "label": "Terminated payroll",
-      "value": 14,
+      "value": 16,
       "className": "segment-danger"
     },
     {
       "label": "No payroll match",
-      "value": 101,
+      "value": 40,
       "className": "segment-risk"
     },
     {
       "label": "Missing AD user",
-      "value": 23,
+      "value": 18,
       "className": "segment-risk"
     },
     {
       "label": "Disabled AD user",
-      "value": 23,
+      "value": 8,
       "className": "segment-watch"
     },
     {
@@ -57,19 +57,19 @@ export const userReadinessSummary = {
   "actionBuckets": [
     {
       "label": "Ready for SSO",
-      "count": 125,
+      "count": 122,
       "tone": "good",
       "description": "UpKeep account has a matching enabled AD identity."
     },
     {
       "label": "Verify payroll identity",
-      "count": 101,
+      "count": 40,
       "tone": "danger",
       "description": "No matching payroll record was found for the UpKeep account."
     },
     {
       "label": "Disable in UpKeep",
-      "count": 14,
+      "count": 16,
       "tone": "danger",
       "description": "Payroll status is inactive or terminated."
     },
@@ -81,7 +81,7 @@ export const userReadinessSummary = {
     },
     {
       "label": "Create or migrate AD identity",
-      "count": 23,
+      "count": 18,
       "tone": "risk",
       "description": "UpKeep account did not match a local AD user."
     },
@@ -108,130 +108,130 @@ export const userReadinessSummary = {
       "status": "active"
     },
     "Ohio Corr": {
-      "users": 15,
-      "matched": 8,
-      "needsAction": 7,
-      "missingPayroll": 6,
+      "users": 11,
+      "matched": 7,
+      "needsAction": 4,
+      "missingPayroll": 4,
       "disabledAd": 0,
       "status": "active"
     },
     "Bridgeview": {
-      "users": 26,
+      "users": 18,
       "matched": 11,
-      "needsAction": 15,
-      "missingPayroll": 10,
+      "needsAction": 7,
+      "missingPayroll": 2,
       "disabledAd": 5,
       "status": "active"
     },
     "Indy Corr": {
-      "users": 19,
-      "matched": 12,
+      "users": 18,
+      "matched": 11,
       "needsAction": 7,
-      "missingPayroll": 6,
-      "disabledAd": 1,
-      "status": "active"
-    },
-    "Detroit": {
-      "users": 10,
-      "matched": 5,
-      "needsAction": 5,
-      "missingPayroll": 5,
-      "disabledAd": 0,
-      "status": "active"
-    },
-    "Lexington": {
-      "users": 6,
-      "matched": 1,
-      "needsAction": 5,
-      "missingPayroll": 4,
-      "disabledAd": 1,
-      "status": "active"
-    },
-    "Marion": {
-      "users": 6,
-      "matched": 0,
-      "needsAction": 6,
-      "missingPayroll": 4,
-      "disabledAd": 0,
-      "status": "active"
-    },
-    "Lincoln": {
-      "users": 9,
-      "matched": 3,
-      "needsAction": 6,
-      "missingPayroll": 6,
-      "disabledAd": 0,
-      "status": "active"
-    },
-    "Nashville Box": {
-      "users": 3,
-      "matched": 0,
-      "needsAction": 3,
-      "missingPayroll": 2,
-      "disabledAd": 0,
-      "status": "active"
-    },
-    "Cleveland": {
-      "users": 19,
-      "matched": 7,
-      "needsAction": 12,
-      "missingPayroll": 7,
-      "disabledAd": 1,
-      "status": "active"
-    },
-    "Indy Brown Box": {
-      "users": 14,
-      "matched": 5,
-      "needsAction": 9,
-      "missingPayroll": 8,
-      "disabledAd": 1,
-      "status": "active"
-    },
-    "Columbus": {
-      "users": 14,
-      "matched": 4,
-      "needsAction": 10,
-      "missingPayroll": 9,
-      "disabledAd": 0,
-      "status": "active"
-    },
-    "Atcorr": {
-      "users": 10,
-      "matched": 2,
-      "needsAction": 8,
       "missingPayroll": 5,
       "disabledAd": 2,
       "status": "active"
     },
+    "Detroit": {
+      "users": 6,
+      "matched": 5,
+      "needsAction": 1,
+      "missingPayroll": 1,
+      "disabledAd": 0,
+      "status": "active"
+    },
+    "Lexington": {
+      "users": 2,
+      "matched": 1,
+      "needsAction": 1,
+      "missingPayroll": 0,
+      "disabledAd": 1,
+      "status": "active"
+    },
+    "Marion": {
+      "users": 1,
+      "matched": 0,
+      "needsAction": 1,
+      "missingPayroll": 0,
+      "disabledAd": 0,
+      "status": "active"
+    },
+    "Lincoln": {
+      "users": 5,
+      "matched": 3,
+      "needsAction": 2,
+      "missingPayroll": 2,
+      "disabledAd": 0,
+      "status": "active"
+    },
+    "Nashville Box": {
+      "users": 0,
+      "matched": 0,
+      "needsAction": 0,
+      "missingPayroll": 0,
+      "disabledAd": 0,
+      "status": "active"
+    },
+    "Cleveland": {
+      "users": 13,
+      "matched": 7,
+      "needsAction": 6,
+      "missingPayroll": 1,
+      "disabledAd": 1,
+      "status": "active"
+    },
+    "Indy Brown Box": {
+      "users": 11,
+      "matched": 5,
+      "needsAction": 6,
+      "missingPayroll": 6,
+      "disabledAd": 0,
+      "status": "active"
+    },
+    "Columbus": {
+      "users": 6,
+      "matched": 4,
+      "needsAction": 2,
+      "missingPayroll": 1,
+      "disabledAd": 0,
+      "status": "active"
+    },
+    "Atcorr": {
+      "users": 7,
+      "matched": 2,
+      "needsAction": 5,
+      "missingPayroll": 2,
+      "disabledAd": 2,
+      "status": "active"
+    },
     "Excel": {
-      "users": 21,
+      "users": 16,
       "matched": 11,
-      "needsAction": 10,
-      "missingPayroll": 7,
+      "needsAction": 5,
+      "missingPayroll": 3,
       "disabledAd": 1,
       "status": "active"
     },
     "ElkCorr": {
-      "users": 16,
+      "users": 13,
       "matched": 9,
-      "needsAction": 7,
-      "missingPayroll": 7,
+      "needsAction": 4,
+      "missingPayroll": 4,
       "disabledAd": 0,
       "status": "active"
     },
     "Toledo": {
-      "users": 15,
+      "users": 12,
       "matched": 10,
-      "needsAction": 5,
-      "missingPayroll": 4,
+      "needsAction": 2,
+      "missingPayroll": 1,
       "disabledAd": 0,
       "status": "active"
     },
     "PAX": {
-      "users": 15,
-      "matched": 5,
-      "needsAction": 10,
-      "missingPayroll": 4,
+      "users": 12,
+      "matched": 4,
+      "needsAction": 8,
+      "missingPayroll": 1,
       "disabledAd": 1,
       "status": "active"
     }

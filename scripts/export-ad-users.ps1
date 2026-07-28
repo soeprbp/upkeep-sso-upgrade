@@ -109,7 +109,7 @@ function Get-EmailsFromUpKeepJson {
   $users = if ($payload.users) { $payload.users } else { $payload }
   $users |
     ForEach-Object { Normalize-Email (First-PropertyValue -Object $_ -Names @("email", "Email")) } |
-    Where-Object { $_ } |
+    Where-Object { $_ -and $_ -notmatch '\+' } |
     Sort-Object -Unique
 }
 

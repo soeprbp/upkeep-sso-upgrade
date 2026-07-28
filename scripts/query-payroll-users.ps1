@@ -107,6 +107,7 @@ function Get-LastNamesFromUpKeepUsers {
 
   $payload = Get-Content -LiteralPath $Path -Raw | ConvertFrom-Json
   @($payload.users) |
+    Where-Object { [string]$_.email -notmatch '\+' } |
     ForEach-Object {
       $last = Normalize-LastName $_.lastName
       if ($last) {

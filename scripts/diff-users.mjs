@@ -1,8 +1,15 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { toCsv } from "../lib/csv.mjs";
-import { fetchEntraUsersFromGraph, readEntraUsersFromCsv } from "../lib/entra-users.mjs";
-import { isUpKeepSiteIgnored, loadDotEnv } from "../lib/env.mjs";
+import {
+  fetchEntraUsersFromGraph,
+  readEntraUsersFromCsv
+} from "../lib/entra-users.mjs";
+import {
+  isUpKeepServiceAccount,
+  isUpKeepSiteIgnored,
+  loadDotEnv
+} from "../lib/env.mjs";
 import { loadPayrollUsers } from "../lib/payroll-users.mjs";
 import { diffUsers, summarizeDiff } from "../lib/user-diff.mjs";
 
@@ -43,8 +50,8 @@ function argValue(name) {
 async function readUpKeepUsers(filePath) {
   const payload = JSON.parse(await fs.readFile(filePath, "utf8"));
   return {
-    users: Array.isArray(payload) ? payload : payload.users ?? [],
-    coverage: Array.isArray(payload) ? null : payload.coverage ?? null
+    users: Array.isArray(payload) ? payload : (payload.users ?? []),
+    coverage: Array.isArray(payload) ? null : (payload.coverage ?? null)
   };
 }
 
@@ -60,15 +67,19 @@ async function main() {
   const upkeepPayload = await readUpKeepUsers(upkeepPath);
   // Keep each site account so remediation remains attributable to every UpKeep site.
   const upkeepUsers = upkeepPayload.users.filter(
-    (user) => !isUpKeepSiteIgnored(user.site)
+    (user) =>
+      !isUpKeepSiteIgnored(user.site) && !isUpKeepServiceAccount(user.email)
   );
   const entraUsers = entraCsvPath
     ? await readEntraUsersFromCsv(path.resolve(entraCsvPath))
     : await fetchEntraUsersFromGraph();
   const payrollCsvPath = argValue("--payroll-csv");
-  const includePayroll = payrollCsvPath || process.env.PAYROLL_SQL_CONNECTION_STRING;
+  const includePayroll =
+    payrollCsvPath || process.env.PAYROLL_SQL_CONNECTION_STRING;
   const payrollUsers = includePayroll
-    ? await loadPayrollUsers({ csvPath: payrollCsvPath ? path.resolve(payrollCsvPath) : null })
+    ? await loadPayrollUsers({
+        csvPath: payrollCsvPath ? path.resolve(payrollCsvPath) : null
+      })
     : [];
 
   const rows = diffUsers(upkeepUsers, entraUsers, payrollUsers, {
@@ -82,7 +93,11 @@ async function main() {
     `${JSON.stringify({ generatedAt: timestamp, upkeepCoverage: upkeepPayload.coverage, summary, rows }, null, 2)}\n`,
     "utf8"
   );
-  await fs.writeFile(path.join(outputDir, "user-diff.csv"), toCsv(rows, columns), "utf8");
+  await fs.writeFile(
+    path.join(outputDir, "user-diff.csv"),
+    toCsv(rows, columns),
+    "utf8"
+  );
 
   console.log(JSON.stringify(summary, null, 2));
   console.log(`Wrote ${path.join(outputDir, "user-diff.json")}`);
