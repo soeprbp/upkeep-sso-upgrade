@@ -1,0 +1,82 @@
+// Welch Corporate Maintenance Reporting - prototype measures
+// Table names assume the CSV queries were renamed as described in powerbi-build-guide.md.
+
+DimDate =
+VAR MinDate = DATE(2020, 1, 1)
+VAR MaxDate = TODAY()
+RETURN
+ADDCOLUMNS(
+    CALENDAR(MinDate, MaxDate),
+    "Year", YEAR([Date]),
+    "Month Number", MONTH([Date]),
+    "Month", FORMAT([Date], "MMM"),
+    "Year Month", FORMAT([Date], "YYYY-MM"),
+    "Completion Period", IF(YEAR([Date]) = YEAR(TODAY()), "YTD Current", "Historical")
+)
+
+Open Work Orders =
+CALCULATE(
+    DISTINCTCOUNT(FactWorkOrders[sourceId]),
+    FactWorkOrders[sourceStatus] <> "complete",
+    FactWorkOrders[sourceStatus] <> "closed",
+    FactWorkOrders[sourceStatus] <> "cancelled",
+    FactWorkOrders[sourceStatus] <> "canceled"
+)
+
+Completed Work Orders =
+CALCULATE(
+    DISTINCTCOUNT(FactWorkOrders[sourceId]),
+    NOT ISBLANK(FactWorkOrders[dateCompleted])
+)
+
+Completed Work Orders YTD =
+CALCULATE(
+    [Completed Work Orders],
+    DATESYTD(DimDate[Date])
+)
+
+PM-Generated Work Orders =
+CALCULATE(
+    DISTINCTCOUNT(FactWorkOrders[sourceId]),
+    FactWorkOrders[category] = "Preventative"
+)
+
+Completed PM Work Orders =
+CALCULATE(
+    [PM-Generated Work Orders],
+    NOT ISBLANK(FactWorkOrders[dateCompleted])
+)
+
+PM Completion Rate =
+DIVIDE([Completed PM Work Orders], [PM-Generated Work Orders])
+
+Sites Reporting =
+CALCULATE(
+    DISTINCTCOUNT(FactRefreshCoverage[site]),
+    FactRefreshCoverage[status] <> "error"
+)
+
+Sites With Exceptions =
+CALCULATE(
+    DISTINCTCOUNT(FactRefreshCoverage[site]),
+    FactRefreshCoverage[status] <> "success",
+    FactRefreshCoverage[status] <> "success-ceiling-suspected"
+)
+
+Sites With Suspected Ceiling =
+CALCULATE(
+    DISTINCTCOUNT(FactRefreshCoverage[site]),
+    FactRefreshCoverage[ceilingSuspected] = TRUE()
+)
+
+Latest Extraction UTC =
+MAX(FactRefreshCoverage[extractedAtUtc])
+
+Open Work Age Days =
+VAR CreatedDate = MAX(FactWorkOrders[createdAt])
+RETURN
+IF(
+    NOT ISBLANK(CreatedDate) && ISBLANK(MAX(FactWorkOrders[dateCompleted])),
+    DATEDIFF(CreatedDate, TODAY(), DAY)
+)
+
