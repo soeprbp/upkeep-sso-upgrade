@@ -1,0 +1,42 @@
+{
+  "reportingScope": "Welch Packaging active production maintenance sites",
+  "generatedFromAudit": "outputs/upkeep-site-usage/site-usage-audit-2026-07-28T13-41-50-535Z.json",
+  "activeSites": [
+    "Welch Packaging (Default)",
+    "Ohio Corr",
+    "Bridgeview",
+    "Indy Corr",
+    "Detroit",
+    "Lincoln",
+    "Cleveland",
+    "Indy Brown Box",
+    "Columbus",
+    "Atcorr",
+    "Excel",
+    "ElkCorr",
+    "Toledo",
+    "PAX"
+  ],
+  "excludedSites": [
+    {
+      "name": "Green Meadows Paper Company",
+      "reason": "inactive/dormant"
+    },
+    {
+      "name": "Lexington",
+      "reason": "inactive/dormant"
+    },
+    {
+      "name": "Marion",
+      "reason": "inactive/dormant"
+    },
+    {
+      "name": "Nashville Box",
+      "reason": "inactive/dormant"
+    },
+    {
+      "name": "Demo Site",
+      "reason": "test-only; never include in production reporting"
+    }
+  ]
+}
