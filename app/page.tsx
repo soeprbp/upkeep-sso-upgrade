@@ -26,6 +26,7 @@ import {
 import { communicationDrafts } from "../data/communications-drafts";
 import {
   communicationPlan,
+  projectUpdates,
   risks,
   rolloutPhases,
   sourceSummary,
@@ -641,6 +642,24 @@ export default function Page() {
               <div>
                 <p className="section-label">Communications</p>
                 <h3>Communications</h3>
+              </div>
+            </div>
+            <div className="message-group">
+              <p className="group-title">Current dependency</p>
+              <div className="status-list compact">
+                {projectUpdates.map((item) => (
+                  <div key={item.label} className="status-row">
+                    <span className="status-icon">
+                      <Circle size={14} />
+                    </span>
+                    <span>
+                      {item.label} - {item.detail}
+                    </span>
+                    <span className="status-value">
+                      {item.status === "complete" ? "Complete" : "Waiting"}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
             <div className="message-group">

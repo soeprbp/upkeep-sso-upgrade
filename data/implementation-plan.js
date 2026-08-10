@@ -200,6 +200,15 @@ export const communicationPlan = [
   }
 ];
 
+export const projectUpdates = [
+  {
+    label: "August 10, 2026",
+    detail:
+      "HR has the payroll-verification email list. User remediation is waiting on HR's completed updates.",
+    status: "waiting"
+  }
+];
+
 export const risks = [
   {
     label: "User confusion",

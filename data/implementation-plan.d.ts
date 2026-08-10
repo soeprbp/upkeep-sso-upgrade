@@ -34,4 +34,9 @@ export const communicationPlan: Array<{
   detail: string;
   status: "sent" | "planned";
 }>;
+export const projectUpdates: Array<{
+  label: string;
+  detail: string;
+  status: "waiting" | "complete";
+}>;
 export const risks: Risk[];
