@@ -1,0 +1,38 @@
+appId: com.welchpkg.upkeep-label-station
+productName: UpKeep Label Station
+artifactName: UpKeep-Label-Station-Setup-${version}.${ext}
+electronVersion: 44.1.0
+asar: true
+npmRebuild: false
+directories:
+  output: ../dist-desktop
+files:
+  - main.mjs
+  - preload.cjs
+  - runtime-options.mjs
+  - settings.mjs
+  - upkeep-auth.mjs
+  - package.json
+extraResources:
+  - from: ../.next/standalone
+    to: app-server
+win:
+  target:
+    - nsis
+  icon: ../build/upkeep-label-station.ico
+nsis:
+  # This is electron-builder's original deterministic GUID for the appId above.
+  # Never change it: Windows uses it to find and replace an existing installation.
+  guid: e510e08c-9759-5096-8c7d-1a970f4bb4f8
+  oneClick: false
+  # New installs default to the current user and do not require elevation.
+  # Assisted mode still detects and safely updates legacy per-machine installs.
+  perMachine: false
+  selectPerMachineByDefault: false
+  allowElevation: true
+  allowToChangeInstallationDirectory: false
+  runAfterFinish: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: UpKeep Label Station
+  deleteAppDataOnUninstall: false

@@ -1,0 +1,9 @@
+{
+  "name": "upkeep-label-station-desktop",
+  "version": "0.3.5",
+  "private": true,
+  "description": "Welch Packaging desktop label station for UpKeep maintenance request portals.",
+  "author": "Welch Packaging",
+  "type": "module",
+  "main": "main.mjs"
+}
